@@ -1,13 +1,16 @@
 "
 |srv|
 srv:= (ZnServer startOn: 8100)
-delegate: ((ZnServerGoogleSSODelegate  new
-googleData: (ZnOAuth2ConsumerData 
-key: '984973766290-6uf0t0ujs2a8erap02s9kh20ts1c69ge.apps.googleusercontent.com'
-secret: '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'		
-redirectUrl: 'http://localhost:8100/sso-google-callback');
-yourself) addInitializationBlock: [:session| session beConsentPrompt  ]) ;
-yourself.
+	delegate: ((ZnServerGoogleSSODelegate  new
+					googleData: (ZnOAuth2ConsumerData 
+									key: 'XXXXX.apps.googleusercontent.com'
+									secret: 'YYYYYYYYYYYYYYYYYY'		
+									redirectUrl: 'http://localhost:8100/sso-google-callback');
+									yourself) 
+									addInitializationBlock: [:session| session beConsentPrompt;beOfflineAccessType. 
+																				session scopes addAll: 
+																					(OrderedCollection with:'https://www.googleapis.com/auth/calendar.readonly' with:'https://www.googleapis.com/auth/calendar')   ]) ;
+									yourself.
 srv
 
 "
