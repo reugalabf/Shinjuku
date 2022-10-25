@@ -21,7 +21,7 @@ Class {
 		'googleData',
 		'initializationBlocks'
 	],
-	#category : #'GoogleAPIClient-ServerDelegate'
+	#category : #'GoogleAPIClient-IdentityAuthentication'
 }
 
 { #category : #accessing }
