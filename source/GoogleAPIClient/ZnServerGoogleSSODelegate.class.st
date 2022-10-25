@@ -36,6 +36,7 @@ ZnServerGoogleSSODelegate >> buildSession [
 	| session |
 	session := ZnOAuth2Session google: self googleData.
 	initializationBlocks do: [ :each | each value: session ].
+	session addDependent: self. 
 	^ session
 ]
 
@@ -207,4 +208,13 @@ ZnServerGoogleSSODelegate >> ssoGoogleData: request [
 
 	entity := ZnEntity html: html. 
 	^ ZnResponse ok: entity
+]
+
+{ #category : #updating }
+ZnServerGoogleSSODelegate >> update: anAspect with: anObject [
+
+	self addInitializationBlock: [ :session | 
+		session
+			refreshToken: anObject;
+			liveAccessToken ]
 ]
