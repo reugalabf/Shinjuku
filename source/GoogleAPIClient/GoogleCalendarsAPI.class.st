@@ -1,46 +1,46 @@
 Class {
-	#name : #GoogleCalendars,
+	#name : #GoogleCalendarsAPI,
 	#superclass : #GoogleService,
 	#category : #'GoogleAPIClient-ServiceBroker'
 }
 
 { #category : #'service api' }
-GoogleCalendars >> clear: calendarId [
+GoogleCalendarsAPI >> clearCalendar: calendarId [
 "POST https://www.googleapis.com/calendar/v3/calendars/calendarId/clear"
 
 
 ]
 
 { #category : #'service api' }
-GoogleCalendars >> delete: calendarId [
+GoogleCalendarsAPI >> deleteCalendar: calendarId [
 "DELETE https://www.googleapis.com/calendar/v3/calendars/calendarId"
 
 
 ]
 
 { #category : #'service api' }
-GoogleCalendars >> get: calendarId [
+GoogleCalendarsAPI >> getCalendar: calendarId [
 "GET https://www.googleapis.com/calendar/v3/calendars/calendarId"
 
 
 ]
 
 { #category : #'service api' }
-GoogleCalendars >> insert [ 
+GoogleCalendarsAPI >> insertCalendar [ 
 "POST https://www.googleapis.com/calendar/v3/calendars"
 
 
 ]
 
 { #category : #'service api' }
-GoogleCalendars >> patch: calendarId [
+GoogleCalendarsAPI >> patchCalendar: calendarId [
 "PATCH https://www.googleapis.com/calendar/v3/calendars/calendarId"
 
 
 ]
 
 { #category : #'service api' }
-GoogleCalendars >> update: calendarId [
+GoogleCalendarsAPI >> updateCalendar: calendarId [
 "PUT https://www.googleapis.com/calendar/v3/calendars/calendarId"
 
 

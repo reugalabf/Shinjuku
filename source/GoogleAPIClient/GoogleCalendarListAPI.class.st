@@ -1,11 +1,11 @@
 Class {
-	#name : #GoogleCalendarList,
+	#name : #GoogleCalendarListAPI,
 	#superclass : #GoogleService,
 	#category : #'GoogleAPIClient-ServiceBroker'
 }
 
 { #category : #'service api' }
-GoogleCalendarList >> delete: calendarId [
+GoogleCalendarListAPI >> delete: calendarId [
 
 	"DELETE https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 
@@ -15,7 +15,7 @@ GoogleCalendarList >> delete: calendarId [
 ]
 
 { #category : #'service api' }
-GoogleCalendarList >> get: calendarId [
+GoogleCalendarListAPI >> get: calendarId [
 
 	"GET https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 
@@ -27,31 +27,31 @@ GoogleCalendarList >> get: calendarId [
 ]
 
 { #category : #'submorphs - add/remove' }
-GoogleCalendarList >> insert [
+GoogleCalendarListAPI >> insert [
 "POST https://www.googleapis.com/calendar/v3/users/me/calendarList"
 ]
 
 { #category : #'service api' }
-GoogleCalendarList >> list [
+GoogleCalendarListAPI >> list [
 
 	^ self getRequestForURL:
 		  'https://www.googleapis.com/calendar/v3/users/me/calendarList'
 ]
 
 { #category : #'submorphs - add/remove' }
-GoogleCalendarList >> patch [
+GoogleCalendarListAPI >> patch [
 
 "PATCH https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 ]
 
 { #category : #'submorphs - add/remove' }
-GoogleCalendarList >> update [
+GoogleCalendarListAPI >> update [
 
 "PUT https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 ]
 
 { #category : #'submorphs - add/remove' }
-GoogleCalendarList >> watch [
+GoogleCalendarListAPI >> watch [
 
 "POST https://www.googleapis.com/calendar/v3/users/me/calendarList/watch"
 ]
