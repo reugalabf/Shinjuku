@@ -5,33 +5,62 @@ Class {
 }
 
 { #category : #'service api' }
-GoogleEventsAPI >> deleteEvent:eventId ofCalendar: calendarId [
-"DELETE https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
+GoogleEventsAPI >> deleteEvent: eventId ofCalendar: calendarId [
+
+	"DELETE https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
+
+	^ self deleteRequestForURL:
+		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
+			   expandMacrosWith: calendarId
+			   with: eventId)
 ]
 
 { #category : #'service api' }
 GoogleEventsAPI >> getEvent:eventId ofCalendar: calendarId [
 "GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
+
+self getRequestForURL:
+		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
+			   expandMacrosWith: calendarId
+			   with: eventId)
 ]
 
 { #category : #'service api' }
-GoogleEventsAPI >> import:calendarId [
-"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events/import"
+GoogleEventsAPI >> import: calendarId [
+
+	"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events/import"
+
+	^self postRequestForURL:
+		('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/import' 
+			 expandMacrosWith: calendarId)
 ]
 
 { #category : #'service api' }
-GoogleEventsAPI >> insert:calendarId [
-"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events"
+GoogleEventsAPI >> insert: calendarId [
+
+	"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events"
+
+	^ self postRequestForURL:
+		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events' 
+			   expandMacrosWith: calendarId)
 ]
 
 { #category : #'service api' }
-GoogleEventsAPI >> instancesOfEvent:eventId ofCalendar: calendarId [
-"GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId/instances"
+GoogleEventsAPI >> instancesOfEvent: eventId ofCalendar: calendarId [
+
+	"GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId/instances"
+
+	^ self getRequestForURL:
+		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>/instances'
+			   expandMacrosWith: calendarId
+			   with: eventId)
 ]
 
 { #category : #'service api' }
 GoogleEventsAPI >> list:calendarId [
 "GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events"
+
+^self getRequestForURL: ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events' expandMacrosWith: calendarId  )
 ]
 
 { #category : #'service api' }
@@ -58,8 +87,14 @@ text:string	 The text describing the event to be created."
 ]
 
 { #category : #'service api' }
-GoogleEventsAPI >> updateEvent:eventId ofCalendar: calendarId [
-"PUT https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
+GoogleEventsAPI >> updateEvent: eventId ofCalendar: calendarId [
+
+	"PUT https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
+
+	^ self putRequestForURL:
+		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
+			   expandMacrosWith: calendarId
+			   with: eventId)
 ]
 
 { #category : #'service api' }

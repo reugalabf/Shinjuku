@@ -26,9 +26,13 @@ GoogleCalendarListAPI >> get: calendarId [
 		  , calendarId
 ]
 
-{ #category : #'submorphs - add/remove' }
+{ #category : #'service api' }
 GoogleCalendarListAPI >> insert [
-"POST https://www.googleapis.com/calendar/v3/users/me/calendarList"
+
+	"POST https://www.googleapis.com/calendar/v3/users/me/calendarList"
+
+	^ self postRequestForURL:
+		  'https://www.googleapis.com/calendar/v3/users/me/calendarList'
 ]
 
 { #category : #'service api' }
@@ -38,19 +42,19 @@ GoogleCalendarListAPI >> list [
 		  'https://www.googleapis.com/calendar/v3/users/me/calendarList'
 ]
 
-{ #category : #'submorphs - add/remove' }
+{ #category : #'not implemented' }
 GoogleCalendarListAPI >> patch [
 
 "PATCH https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 ]
 
-{ #category : #'submorphs - add/remove' }
+{ #category : #'service api' }
 GoogleCalendarListAPI >> update [
 
 "PUT https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 ]
 
-{ #category : #'submorphs - add/remove' }
+{ #category : #'not implemented' }
 GoogleCalendarListAPI >> watch [
 
 "POST https://www.googleapis.com/calendar/v3/users/me/calendarList/watch"
