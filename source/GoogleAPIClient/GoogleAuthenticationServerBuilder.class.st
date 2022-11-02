@@ -1,6 +1,13 @@
 "
-This is a builder that takes the downloaded json from the google console and instantiate the identification (SSO) local server.
-It will configure the delegate with the post initialization blocks and the refreshToken
+It builds the authentication (OAuth2) infrastructure
+
+GoogleAuthenticationServerBuilder 
+port: '8100' 
+key: '984973766290-6uf0t0ujs2a8erap02s9kh20ts1c69ge.apps.googleusercontent.com' 
+secret: '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' 
+redirectTo: 'http://localhost:8100/sso-google-callback' 
+initializationBlocks: (OrderedCollection new:[:session| session beConsentPrompt;beOfflineAccessType. 
+	session scopes addAll: (OrderedCollection with:'https://www.googleapis.com/auth/calendar.readonly' with:'https://www.googleapis.com/auth/calendar')])
 
 "
 Class {
@@ -20,20 +27,6 @@ GoogleAuthenticationServerBuilder class >> delegateKey: aKey secret: aSecret red
 
 { #category : #building }
 GoogleAuthenticationServerBuilder class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks [
-
-	"	
-|srv|
-srv:= (ZnServer startOn: 8100)
-delegate: ((ZnServerGoogleSSODelegate  new
-googleData: (ZnOAuth2ConsumerData
-key: '984973766290-6uf0t0ujs2a8erap02s9kh20ts1c69ge.apps.googleusercontent.com'
-secret: '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'
-redirectUrl: 'http://localhost:8100/sso-google-callback');
-yourself) 
-addInitializationBlock: [:session| session beConsentPrompt;beOfflineAccessType. 
-	session scopes addAll: (OrderedCollection with:'https://www.googleapis.com/auth/calendar.readonly' with:'https://www.googleapis.com/auth/calendar')   ]) ;
-yourself.
-srv."
 
 	| srv delegate |
 	delegate := self delegateKey: aKey secret: aSecret redirect: aUrl.
