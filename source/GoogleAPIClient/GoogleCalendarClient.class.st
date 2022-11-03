@@ -7,7 +7,16 @@ Class {
 { #category : #initialization }
 GoogleCalendarClient >> authenticationPort [
 
-	^ '8100'
+	^ 8100
+]
+
+{ #category : #testing }
+GoogleCalendarClient >> canCallAPI [
+
+	^ authenticationServer isRunning and: [( 
+		  authenticationServer sessionManager hasSessionForKey:
+			  'google-session') and:[(authenticationServer sessionManager sessionForKey:
+			  'google-session')isLive]]
 ]
 
 { #category : #initialization }

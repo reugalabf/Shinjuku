@@ -26,6 +26,14 @@ GoogleAuthenticationServerBuilder class >> delegateKey: aKey secret: aSecret red
 ]
 
 { #category : #building }
+GoogleAuthenticationServerBuilder class >> getServerOn: aPort [
+
+	^ ZnServer defaultServerClass  allInstances
+		  detect: [ :each | each port = aPort ]
+		  ifNone: [ ZnServer startOn: aPort ]
+]
+
+{ #category : #building }
 GoogleAuthenticationServerBuilder class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks [
 
 	| srv delegate |
@@ -33,10 +41,10 @@ GoogleAuthenticationServerBuilder class >> port: aPort key: aKey secret: aSecret
 	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock ].
 
 
-	srv := (ZnServer startOn: aPort)
+	srv := (self getServerOn: aPort)
 		       delegate: delegate;
 		       yourself.
-	ZnEasy get:
-		('http://localhost:<1s>/sso-google' expandMacrosWith: aPort).
-	srv
+	ZnEasy get: ('http://localhost:<1s>/sso-google' expandMacrosWith:
+			 aPort printString).
+	^ srv
 ]

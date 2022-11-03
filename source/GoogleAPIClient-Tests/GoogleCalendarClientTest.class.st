@@ -9,12 +9,14 @@ Class {
 
 { #category : #running }
 GoogleCalendarClientTest >> setUp [
+
 	super setUp.
-	
-	client := GoogleCalendarClient new.
+
+	client := GoogleCalendarClient new
 ]
 
 { #category : #tests }
 GoogleCalendarClientTest >> testCalendars_list [
-self halt
+
+	self assert: client halt canCallAPI
 ]
