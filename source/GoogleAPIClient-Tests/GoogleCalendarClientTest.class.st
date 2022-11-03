@@ -19,6 +19,7 @@ GoogleCalendarClientTest >> setUp [
 	super setUp.
 
 	client := GoogleCalendarClient new
+	
 ]
 
 { #category : #tests }
