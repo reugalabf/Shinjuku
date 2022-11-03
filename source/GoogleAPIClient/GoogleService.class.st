@@ -10,6 +10,14 @@ Class {
 	#category : #'GoogleAPIClient-ServiceBroker'
 }
 
+{ #category : #'as yet unclassified' }
+GoogleService class >> withSession: aSession [
+
+	^ self new
+		  sessionManager: aSession;
+		  yourself
+]
+
 { #category : #'token management' }
 GoogleService >> createNewSession [
 

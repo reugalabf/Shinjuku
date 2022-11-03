@@ -22,7 +22,7 @@ GoogleCalendarListAPI >> get: calendarId [
 	"calendarId is a String"
 
 	^ self getRequestForURL:
-		  'https://www.googleapis.com/calendar/v3/users/me/calendarList'
+		  'https://www.googleapis.com/calendar/v3/users/me/calendarList/'
 		  , calendarId
 ]
 

@@ -25,7 +25,7 @@ GoogleAuthenticationServerBuilder class >> delegateKey: aKey secret: aSecret red
 		  yourself
 ]
 
-{ #category : #building }
+{ #category : #private }
 GoogleAuthenticationServerBuilder class >> getServerOn: aPort [
 
 	^ ZnServer defaultServerClass  allInstances
@@ -44,7 +44,8 @@ GoogleAuthenticationServerBuilder class >> port: aPort key: aKey secret: aSecret
 	srv := (self getServerOn: aPort)
 		       delegate: delegate;
 		       yourself.
-	ZnEasy get: ('http://localhost:<1s>/sso-google' expandMacrosWith:
-			 aPort printString).
+	(srv hasSessionForKey: 'google-session') ifFalse: [ 
+		ZnEasy get: ('http://localhost:<1s>/sso-google' expandMacrosWith:
+				 aPort printString) ].
 	^ srv
 ]

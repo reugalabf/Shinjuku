@@ -1,6 +1,9 @@
 Class {
 	#name : #GoogleCalendarClient,
 	#superclass : #GoogleServiceClient,
+	#instVars : [
+		'calendarListAPI'
+	],
 	#category : #'GoogleAPIClient-Client'
 }
 
@@ -19,6 +22,12 @@ GoogleCalendarClient >> canCallAPI [
 			  'google-session')isLive]]
 ]
 
+{ #category : #calendarList }
+GoogleCalendarClient >> getCalendarList: calendarId [
+
+	^ calendarListAPI get: calendarId
+]
+
 { #category : #initialization }
 GoogleCalendarClient >> initBlocks [
 
@@ -34,6 +43,21 @@ GoogleCalendarClient >> initBlocks [
 					   with:
 					   'https://www.googleapis.com/auth/calendar.events.readonly '
 					   with: 'https://www.googleapis.com/auth/calendar.events') ]
+]
+
+{ #category : #initialization }
+GoogleCalendarClient >> initialize [
+
+	super initialize.
+	calendarListAPI := GoogleCalendarListAPI withSession:
+		                   authenticationServer sessionManager.
+	^ self
+]
+
+{ #category : #calendarList }
+GoogleCalendarClient >> listCalendarList [
+
+	^ calendarListAPI list
 ]
 
 { #category : #initialization }
