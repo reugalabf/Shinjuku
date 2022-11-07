@@ -1,16 +1,48 @@
+"
+settings JSON format 
+
+#port: String
+#url: String
+#key: String
+#secret: String
+
+"
 Class {
 	#name : #GoogleServiceClient,
 	#superclass : #Object,
 	#instVars : [
-		'authenticationServer'
+		'authenticationServer',
+		'settings'
 	],
 	#category : #'GoogleAPIClient-Client'
 }
 
+{ #category : #'instance creation' }
+GoogleServiceClient class >> fromJson: aFilePathString [
+
+	^ self withSettings:
+		  (NeoJSONReader on: aFilePathString asFileReference readStream)
+			  next
+]
+
+{ #category : #'instance creation' }
+GoogleServiceClient class >> new [
+
+	^ self shouldNotImplement
+]
+
+{ #category : #'instance creation' }
+GoogleServiceClient class >> withSettings: aDictionary [
+
+	^ super new
+		  settings: aDictionary;
+		  yourself
+]
+
 { #category : #initialization }
 GoogleServiceClient >> authenticationPort [
 
-	^ self subclassResponsibility
+	^ settings at: #port
 ]
 
 { #category : #initialization }
@@ -34,24 +66,37 @@ GoogleServiceClient >> initBlocks [
 GoogleServiceClient >> initialize [
 
 	super initialize.
-	authenticationServer := self buildAuthenticationServer.
+	
 	^ self
+]
+
+{ #category : #accessing }
+GoogleServiceClient >> initializeSettings: aDictionary [
+
+	((aDictionary includesKey: #port) and: [ 
+		 (aDictionary includesKey: #url) and: [ 
+			 (aDictionary includesKey: #key) and: [ 
+				 aDictionary includesKey: #secret ] ] ])
+		ifTrue: [ settings := aDictionary ]
+		ifFalse: [ self error: 'Incomplete settings' ].
+
+	authenticationServer := self buildAuthenticationServer
 ]
 
 { #category : #initialization }
 GoogleServiceClient >> redirectUrl [
 
-	^ self subclassResponsibility
+	^ settings at: #url
 ]
 
 { #category : #initialization }
 GoogleServiceClient >> serviceKey [
 
-	^ self subclassResponsibility
+	^ settings at: #key
 ]
 
 { #category : #initialization }
 GoogleServiceClient >> serviceSecret [
 
-	^ self subclassResponsibility
+	^ settings at: #secret
 ]

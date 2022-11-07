@@ -7,12 +7,6 @@ Class {
 	#category : #'GoogleAPIClient-Client'
 }
 
-{ #category : #initialization }
-GoogleCalendarClient >> authenticationPort [
-
-	^ 8100
-]
-
 { #category : #testing }
 GoogleCalendarClient >> canCallAPI [
 
@@ -58,22 +52,4 @@ GoogleCalendarClient >> initialize [
 GoogleCalendarClient >> listCalendarList [
 
 	^ calendarListAPI list
-]
-
-{ #category : #initialization }
-GoogleCalendarClient >> redirectUrl [
-
-	^ 'http://localhost:8100/sso-google-callback'
-]
-
-{ #category : #initialization }
-GoogleCalendarClient >> serviceKey [
-
-	^ '984973766290-6uf0t0ujs2a8erap02s9kh20ts1c69ge.apps.googleusercontent.com'
-]
-
-{ #category : #initialization }
-GoogleCalendarClient >> serviceSecret [
-
-	^ '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'
 ]
