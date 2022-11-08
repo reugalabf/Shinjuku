@@ -18,7 +18,7 @@ GoogleCalendarClientTest >> setUp [
 
 	super setUp.
 
-	client := GoogleCalendarClient new
+	client := GoogleCalendarClient fromJson: 'calendarClientSettings.json'
 	
 ]
 
@@ -29,7 +29,7 @@ GoogleCalendarClientTest >> testCalendarList_get [
 	self assert: client canCallAPI.
 
 	json := (NeoJSONReader on:
-			         (client getCalendarList: self bodegaCalendarId) readStream)
+			         (client calendarList_get: self bodegaCalendarId) readStream)
 		        propertyNamesAsSymbols: true;
 		        next.
 
@@ -45,7 +45,7 @@ GoogleCalendarClientTest >> testCalendarList_list [
 	| json |
 	self assert: client canCallAPI.
 
-	json := (NeoJSONReader on: client listCalendarList readStream)
+	json := (NeoJSONReader on: client calendarList_list readStream)
 		        propertyNamesAsSymbols: true;
 		        next.
 

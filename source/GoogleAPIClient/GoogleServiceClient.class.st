@@ -35,7 +35,7 @@ GoogleServiceClient class >> new [
 GoogleServiceClient class >> withSettings: aDictionary [
 
 	^ super new
-		  settings: aDictionary;
+		  initializeSettings: aDictionary;
 		  yourself
 ]
 

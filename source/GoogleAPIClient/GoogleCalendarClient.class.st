@@ -2,10 +2,35 @@ Class {
 	#name : #GoogleCalendarClient,
 	#superclass : #GoogleServiceClient,
 	#instVars : [
-		'calendarListAPI'
+		'calendarListAPI',
+		'eventsAPI'
 	],
 	#category : #'GoogleAPIClient-Client'
 }
+
+{ #category : #calendarList }
+GoogleCalendarClient >> calendarList_delete: calendarId [
+
+	^ calendarListAPI delete: calendarId
+]
+
+{ #category : #calendarList }
+GoogleCalendarClient >> calendarList_get: calendarId [
+
+	^ calendarListAPI get: calendarId
+]
+
+{ #category : #calendarList }
+GoogleCalendarClient >> calendarList_insert [
+
+	^ calendarListAPI insert
+]
+
+{ #category : #calendarList }
+GoogleCalendarClient >> calendarList_list [
+
+	^ calendarListAPI list
+]
 
 { #category : #testing }
 GoogleCalendarClient >> canCallAPI [
@@ -16,10 +41,22 @@ GoogleCalendarClient >> canCallAPI [
 			  'google-session')isLive]]
 ]
 
-{ #category : #calendarList }
-GoogleCalendarClient >> getCalendarList: calendarId [
+{ #category : #events }
+GoogleCalendarClient >> event_delete: eventId calendar: calendarId [
 
-	^ calendarListAPI get: calendarId
+	^ eventsAPI deleteEvent: eventId ofCalendar: calendarId
+]
+
+{ #category : #events }
+GoogleCalendarClient >> event_insert: calendarId [
+
+	^ eventsAPI insert: calendarId
+]
+
+{ #category : #events }
+GoogleCalendarClient >> event_list: calendarId [
+
+	^ eventsAPI list: calendarId
 ]
 
 { #category : #initialization }
@@ -43,13 +80,17 @@ GoogleCalendarClient >> initBlocks [
 GoogleCalendarClient >> initialize [
 
 	super initialize.
-	calendarListAPI := GoogleCalendarListAPI withSession:
-		                   authenticationServer sessionManager.
+
 	^ self
 ]
 
-{ #category : #calendarList }
-GoogleCalendarClient >> listCalendarList [
+{ #category : #initialization }
+GoogleCalendarClient >> initializeSettings: aDictionary [
 
-	^ calendarListAPI list
+	super initializeSettings: aDictionary.
+	calendarListAPI := GoogleCalendarListAPI withSession:
+		                   authenticationServer sessionManager.
+	eventsAPI := GoogleEventsAPI withSession:
+		             authenticationServer sessionManager.
+	^ self
 ]

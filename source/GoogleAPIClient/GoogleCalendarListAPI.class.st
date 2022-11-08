@@ -48,7 +48,7 @@ GoogleCalendarListAPI >> patch [
 "PATCH https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 ]
 
-{ #category : #'service api' }
+{ #category : #'not implemented' }
 GoogleCalendarListAPI >> update [
 
 "PUT https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"

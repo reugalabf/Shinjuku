@@ -87,14 +87,20 @@ text:string	 The text describing the event to be created."
 ]
 
 { #category : #'service api' }
-GoogleEventsAPI >> updateEvent: eventId ofCalendar: calendarId [
+GoogleEventsAPI >> updateEvent: event ofCalendar: calendarId [
 
 	"PUT https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
 
-	^ self putRequestForURL:
-		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
-			   expandMacrosWith: calendarId
-			   with: eventId)
+	| json |
+	json := String streamContents: [ :stream | 
+		        (NeoJSONWriter on: stream)
+			        prettyPrint: true;
+			        "mapInstVarsFor: PlaceAndTime ;"nextPut: event ].
+
+	^ (self putRequestForURL:
+		   ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
+			    expandMacrosWith: calendarId
+			    with: event id)) headers at: 'application/json' put: json
 ]
 
 { #category : #'service api' }
