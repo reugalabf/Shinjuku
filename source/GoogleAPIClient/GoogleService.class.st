@@ -10,8 +10,8 @@ Class {
 	#category : #'GoogleAPIClient-ServiceBroker'
 }
 
-{ #category : #'as yet unclassified' }
-GoogleService class >> withSession: aSession [
+{ #category : #'instance creation' }
+GoogleService class >> withSessionManager: aSession [
 
 	^ self new
 		  sessionManager: aSession;

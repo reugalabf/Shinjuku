@@ -88,9 +88,9 @@ GoogleCalendarClient >> initialize [
 GoogleCalendarClient >> initializeSettings: aDictionary [
 
 	super initializeSettings: aDictionary.
-	calendarListAPI := GoogleCalendarListAPI withSession:
+	calendarListAPI := GoogleCalendarListAPI withSessionManager:
 		                   authenticationServer sessionManager.
-	eventsAPI := GoogleEventsAPI withSession:
+	eventsAPI := GoogleEventsAPI withSessionManager:
 		             authenticationServer sessionManager.
 	^ self
 ]
