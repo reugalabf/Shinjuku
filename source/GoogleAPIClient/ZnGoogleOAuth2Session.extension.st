@@ -48,7 +48,8 @@ ZnGoogleOAuth2Session >> storeOn: writeStream [
 	dataDict at: #refreshToken put: refreshToken.
 	dataDict at: #key put: consumerData key.
 	dataDict at: #secret put: consumerData secret.
-	writeStream nextPutAll: (NeoJSONWriter toString: dataDict)
+	writeStream nextPutAll: (NeoJSONWriter toString: dataDict).
+	writeStream close
 ]
 
 { #category : #'*GoogleAPIClient' }
@@ -56,5 +57,5 @@ ZnGoogleOAuth2Session >> updateTokens: tokenData [
 
 	super updateTokens: tokenData.
 	(refreshToken notNil and: [ self storeFileName exists not ]) ifTrue: [ 
-		self storeOn: [ self storeFileName writeStream ] ]
+		self storeOn:  self storeFileName writeStream  ]
 ]
