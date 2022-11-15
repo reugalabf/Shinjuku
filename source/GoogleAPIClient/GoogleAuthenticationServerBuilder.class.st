@@ -45,7 +45,7 @@ GoogleAuthenticationServerBuilder class >> port: aPort key: aKey secret: aSecret
 		       delegate: delegate;
 		       yourself.
 	(srv hasSessionForKey: 'google-session') ifFalse: [ 
-		ZnEasy get: ('http://localhost:<1s>/sso-google' expandMacrosWith:
-				 aPort printString) ].
+		[ZnEasy get: ('http://localhost:<1s>/sso-google' expandMacrosWith:
+				 aPort printString)] forkAt:70 ].
 	^ srv
 ]
