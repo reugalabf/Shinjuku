@@ -164,8 +164,6 @@ Class {
 		'colorId',
 		'creator',
 		'organizer',
-		'startTime',
-		'endTime',
 		'endTimeUnspecified',
 		'recurrence',
 		'recurringEventId',
@@ -189,7 +187,9 @@ Class {
 		'reminders',
 		'source',
 		'attachments',
-		'eventType'
+		'eventType',
+		'start',
+		'end'
 	],
 	#category : #'GoogleAPIClient-CalendarEntities'
 }
@@ -210,12 +210,12 @@ GoogleEvent class >> neoJsonMapping: mapper [
 		(mapping mapInstVar: #created) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #updated) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #created) valueSchema: EventParty.
-		(mapping mapInstVar: #startTime) valueSchema: #Timestamp.
-		(mapping mapInstVar: #endTime) valueSchema: #TimeStamp.
+		(mapping mapInstVar: #start) valueSchema: #Timestamp.
+		(mapping mapInstVar: #end) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #created) valueSchema: #ArrayOfEventParty ].
 	mapper
-		for: #Timestamp
+		for: #TimeStamp
 		customDo: [ :mapping | "date dateTime timeZone"
 			mapping encoder: [ :obj | 
 				Dictionary new
@@ -341,15 +341,27 @@ GoogleEvent >> description: anObject [
 ]
 
 { #category : #accessing }
+GoogleEvent >> end [
+
+	^ end
+]
+
+{ #category : #accessing }
+GoogleEvent >> end: anObject [
+
+	end := anObject
+]
+
+{ #category : #accessing }
 GoogleEvent >> endTime [
 
-	^ endTime
+	^ end
 ]
 
 { #category : #accessing }
 GoogleEvent >> endTime: anObject [
 
-	endTime := anObject
+	end := anObject
 ]
 
 { #category : #accessing }
@@ -629,15 +641,27 @@ GoogleEvent >> source: anObject [
 ]
 
 { #category : #accessing }
+GoogleEvent >> start [
+
+	^ start
+]
+
+{ #category : #accessing }
+GoogleEvent >> start: anObject [
+
+	start := anObject
+]
+
+{ #category : #accessing }
 GoogleEvent >> startTime [
 
-	^ startTime
+	^ start
 ]
 
 { #category : #accessing }
 GoogleEvent >> startTime: anObject [
 
-	startTime := anObject
+	start := anObject
 ]
 
 { #category : #accessing }

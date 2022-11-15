@@ -46,6 +46,16 @@ GoogleEventsAPI >> insert: calendarId [
 ]
 
 { #category : #'service api' }
+GoogleEventsAPI >> insert: calendarId event: anEvent [
+
+	"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events"
+
+	^ self postRequestForURL:
+		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events' 
+			   expandMacrosWith: calendarId) contents: (NeoJSONWriter toString: anEvent)
+]
+
+{ #category : #'service api' }
 GoogleEventsAPI >> instancesOfEvent: eventId ofCalendar: calendarId [
 
 	"GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId/instances"

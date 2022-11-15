@@ -54,3 +54,22 @@ GoogleCalendarClientTest >> testCalendarList_list [
 
 	self assert: (json at: 'kind') = 'calendar#calendarList'
 ]
+
+{ #category : #tests }
+GoogleCalendarClientTest >> testEvents_list [
+
+	| json |
+	self assert: client canCallAPI.
+
+	json := (NeoJSONReader on: (client
+				          event_insert:
+					          'c1b1d2c918f8872aebc61fba7d59f7d84fede3e7e819f84e4d23004501c8bec2@group.calendar.google.com'
+				          eventElement: (GoogleEvent new
+						          end: DateAndTime now;
+						           yourself)) readStream)
+		        propertyNamesAsSymbols: true;
+		        next.
+	self assert: (json at: 'error') isNil.
+
+	self assert: (json at: 'kind') = 'calendar#event'
+]
