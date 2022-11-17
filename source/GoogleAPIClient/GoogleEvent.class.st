@@ -210,7 +210,7 @@ GoogleEvent class >> neoJsonMapping: mapper [
 		(mapping mapInstVar: #created) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #updated) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #created) valueSchema: EventParty.
-		(mapping mapInstVar: #start) valueSchema: #Timestamp.
+		(mapping mapInstVar: #start) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #end) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #created) valueSchema: #ArrayOfEventParty ].
@@ -219,13 +219,15 @@ GoogleEvent class >> neoJsonMapping: mapper [
 		customDo: [ :mapping | "date dateTime timeZone"
 			mapping encoder: [ :obj | 
 				Dictionary new
-					at: 'date' put: obj asDate yyyymmdd;
 					at: 'dateTime'
-					put: obj hours printString , ':' , obj minutes printString;
-					"at: 'timeZone' put: (obj offset hours)printString;"yourself ].
+					put: obj asDate yyyymmdd , 'T' , obj hours printString , ':'
+						, obj minutes printString , obj seconds printString , '.000-03:00';
+					at: 'timeZone' put: 'America/Argentina/Cordoba';
+					yourself
+				"at: 'date' put: obj asDate yyyymmdd;" ].
 			mapping decoder: [ :obj | 
-				DateAndTime fromString:
-					(obj at: #date) , 'T' , (obj at: #dateTime) ] ].
+				DateAndTime fromString: (obj at: #dateTime)
+				"(obj at: #date) , 'T' ," ] ].
 	mapper mapInstVarsFor: EventParty.
 	mapper
 		for: #ArrayOfEventParty

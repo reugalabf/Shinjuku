@@ -48,9 +48,15 @@ GoogleCalendarClient >> event_delete: eventId calendar: calendarId [
 ]
 
 { #category : #events }
+GoogleCalendarClient >> event_get: calendarId eventId: eventId [
+
+	^ eventsAPI getEvent:eventId ofCalendar: calendarId
+]
+
+{ #category : #events }
 GoogleCalendarClient >> event_insert: calendarId [
 
-	^ eventsAPI insert: calendarId
+	self halt
 ]
 
 { #category : #events }

@@ -13,6 +13,11 @@ GoogleCalendarClientTest >> bodegaCalendarId [
 	^ 'c1b1d2c918f8872aebc61fba7d59f7d84fede3e7e819f84e4d23004501c8bec2@group.calendar.google.com'
 ]
 
+{ #category : #tests }
+GoogleCalendarClientTest >> bodegaEventId [ 
+^'5mbrt1e068jalc1mli9gm88h44'
+]
+
 { #category : #running }
 GoogleCalendarClientTest >> setUp [
 
@@ -50,9 +55,46 @@ GoogleCalendarClientTest >> testCalendarList_list [
 		        next.
 
 
-
+json inspect.
 
 	self assert: (json at: 'kind') = 'calendar#calendarList'
+]
+
+{ #category : #tests }
+GoogleCalendarClientTest >> testEvents_get [
+
+	| json response |
+	self assert: client canCallAPI.
+	response := client
+		            event_get: self bodegaCalendarId
+		            eventId: self bodegaEventId.
+	response inspect.
+	json := (NeoJSONReader on: response readStream)
+		        propertyNamesAsSymbols: true;
+		        next.
+	self should: [ json at: 'error' ] raise: Error.
+	json inspect.
+	self assert: (json at: 'kind') = 'calendar#event'
+]
+
+{ #category : #tests }
+GoogleCalendarClientTest >> testEvents_insert [
+
+	| json |
+	self assert: client canCallAPI.
+
+	json := (NeoJSONReader on: (client
+				          event_insert:
+					          self bodegaCalendarId 
+				          eventElement: (GoogleEvent new
+						          end: (DateAndTime fromString: '2022-11-7');
+									"start: (DateAndTime fromString: '2022-11-7');"
+						           yourself)) readStream)
+		        propertyNamesAsSymbols: true;
+		        next.
+	self should: [json at: 'error'] raise: Error.	
+
+	self assert: (json at: 'kind') = 'calendar#event'
 ]
 
 { #category : #tests }
@@ -61,15 +103,11 @@ GoogleCalendarClientTest >> testEvents_list [
 	| json |
 	self assert: client canCallAPI.
 
-	json := (NeoJSONReader on: (client
-				          event_insert:
-					          'c1b1d2c918f8872aebc61fba7d59f7d84fede3e7e819f84e4d23004501c8bec2@group.calendar.google.com'
-				          eventElement: (GoogleEvent new
-						          end: DateAndTime now;
-						           yourself)) readStream)
+	json := (NeoJSONReader on:
+			         (client event_list: self bodegaCalendarId) readStream)
 		        propertyNamesAsSymbols: true;
 		        next.
-	self assert: (json at: 'error') isNil.
+	self should: [json at: 'error'] raise: Error.
 
-	self assert: (json at: 'kind') = 'calendar#event'
+	self assert: (json at: 'kind') = 'calendar#events'
 ]

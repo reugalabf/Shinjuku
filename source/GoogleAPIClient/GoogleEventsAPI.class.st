@@ -16,10 +16,11 @@ GoogleEventsAPI >> deleteEvent: eventId ofCalendar: calendarId [
 ]
 
 { #category : #'service api' }
-GoogleEventsAPI >> getEvent:eventId ofCalendar: calendarId [
-"GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
+GoogleEventsAPI >> getEvent: eventId ofCalendar: calendarId [
 
-self getRequestForURL:
+	"GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId"
+
+	^ self getRequestForURL:
 		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
 			   expandMacrosWith: calendarId
 			   with: eventId)
