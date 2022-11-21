@@ -106,10 +106,12 @@ GoogleService >> postRequestForURL: requestUrl contents: aCollection [
 		at: 'Authorization'
 		put: 'Bearer ' , self liveAccessToken.
 	client request headers at: 'Accept' put: 'application/json'.
-	client request headers at: 	'Content-Type' put:'application/json'.
-self halt.
-
-	result := client post: requestUrl contents: aCollection.
+	client request headers at: 'Content-Type' put: 'application/json'.
+	self halt.
+	client url: requestUrl.
+	client entity:
+		(ZnEntity with: aCollection type: ZnMimeType applicationJson).
+	result := client post.
 	client request writeToTranscript.
 	^ result
 ]

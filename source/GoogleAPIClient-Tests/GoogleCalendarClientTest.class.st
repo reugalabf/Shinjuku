@@ -87,8 +87,8 @@ GoogleCalendarClientTest >> testEvents_insert [
 				          event_insert:
 					          self bodegaCalendarId 
 				          eventElement: (GoogleEvent new
-						          end: (DateAndTime fromString: '2022-11-7');
-									"start: (DateAndTime fromString: '2022-11-7');"
+						          end: (DateAndTime fromString: '2022-11-7T11:11:00');
+									start: (DateAndTime fromString: '2022-11-7T11:10:00');
 						           yourself)) readStream)
 		        propertyNamesAsSymbols: true;
 		        next.
