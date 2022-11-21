@@ -37,16 +37,6 @@ GoogleEventsAPI >> import: calendarId [
 ]
 
 { #category : #'service api' }
-GoogleEventsAPI >> insert: calendarId [
-
-	"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events"
-
-	^ self postRequestForURL:
-		  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events' 
-			   expandMacrosWith: calendarId)
-]
-
-{ #category : #'service api' }
 GoogleEventsAPI >> insert: calendarId event: anEvent [
 
 	"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events"

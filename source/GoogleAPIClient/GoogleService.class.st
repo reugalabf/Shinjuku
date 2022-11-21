@@ -88,11 +88,12 @@ GoogleService >> postRequestForURL: requestUrl [
 	"GET https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 
 	"calendarId is a String"
-self halt
+
+	self postRequestForURL: requestUrl contents: ''
 ]
 
 { #category : #'http request' }
-GoogleService >> postRequestForURL: requestUrl contents: aCollection [
+GoogleService >> postRequestForURL: requestUrl contents: contentString [
 
 	"GET https://www.googleapis.com/calendar/v3/users/me/calendarList/calendarId"
 
@@ -107,10 +108,11 @@ GoogleService >> postRequestForURL: requestUrl contents: aCollection [
 		put: 'Bearer ' , self liveAccessToken.
 	client request headers at: 'Accept' put: 'application/json'.
 	client request headers at: 'Content-Type' put: 'application/json'.
-	self halt.
+
 	client url: requestUrl.
-	client entity:
-		(ZnEntity with: aCollection type: ZnMimeType applicationJson).
+	contentString isEmptyOrNil ifFalse: [ 
+		client entity:
+			(ZnEntity with: contentString type: ZnMimeType applicationJson) ].
 	result := client post.
 	client request writeToTranscript.
 	^ result
