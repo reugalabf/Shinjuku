@@ -54,12 +54,6 @@ GoogleCalendarClient >> event_get: calendarId eventId: eventId [
 ]
 
 { #category : #events }
-GoogleCalendarClient >> event_insert: calendarId [
-
-	self halt
-]
-
-{ #category : #events }
 GoogleCalendarClient >> event_insert: calendarId eventElement: anEvent [
 
 	^ eventsAPI insert: calendarId event:anEvent
@@ -69,6 +63,12 @@ GoogleCalendarClient >> event_insert: calendarId eventElement: anEvent [
 GoogleCalendarClient >> event_list: calendarId [
 
 	^ eventsAPI list: calendarId
+]
+
+{ #category : #events }
+GoogleCalendarClient >> event_update: calendarId eventElement: anEvent [
+
+	^ eventsAPI updateEvent: anEvent ofCalendar: calendarId
 ]
 
 { #category : #initialization }

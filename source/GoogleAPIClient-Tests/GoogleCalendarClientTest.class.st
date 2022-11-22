@@ -2,7 +2,8 @@ Class {
 	#name : #GoogleCalendarClientTest,
 	#superclass : #TestCase,
 	#instVars : [
-		'client'
+		'client',
+		'garbageEvent'
 	],
 	#category : #'GoogleAPIClient-Tests'
 }
@@ -18,13 +19,34 @@ GoogleCalendarClientTest >> bodegaEventId [
 ^'5mbrt1e068jalc1mli9gm88h44'
 ]
 
+{ #category : #tests }
+GoogleCalendarClientTest >> createEvent [
+
+	^ client
+		  event_insert: self bodegaCalendarId
+		  eventElement: (GoogleEvent new
+				   description: '|';
+				   end: (DateAndTime fromString: '2022-11-7T11:11:00');
+				   start: (DateAndTime fromString: '2022-11-7T11:10:00');
+				   yourself)
+]
+
 { #category : #running }
 GoogleCalendarClientTest >> setUp [
 
 	super setUp.
 
-	client := GoogleCalendarClient fromJson: 'calendarClientSettings.json'
+	client := GoogleCalendarClient fromJson: 'calendarClientSettings.json'.
+	"garbageEvent := OrderedCollection new."
 	
+]
+
+{ #category : #running }
+GoogleCalendarClientTest >> tearDown [
+
+	garbageEvent ifNil: [ ^ self ].
+
+	client event_delete: garbageEvent calendar: self bodegaCalendarId
 ]
 
 { #category : #tests }
@@ -80,21 +102,21 @@ GoogleCalendarClientTest >> testEvents_get [
 { #category : #tests }
 GoogleCalendarClientTest >> testEvents_insert [
 
-	| json |
+	| dictResult json cloudEvent |
 	self assert: client canCallAPI.
+	json := self createEvent.
+	dictResult := (NeoJSONReader on: json readStream)
+		              propertyNamesAsSymbols: true;
+		              next.
 
-	json := (NeoJSONReader on: (client
-				          event_insert:
-					          self bodegaCalendarId 
-				          eventElement: (GoogleEvent new
-						          end: (DateAndTime fromString: '2022-11-7T11:11:00');
-									start: (DateAndTime fromString: '2022-11-7T11:10:00');
-						           yourself)) readStream)
-		        propertyNamesAsSymbols: true;
-		        next.
-	self should: [json at: 'error'] raise: Error.	
 
-	self assert: (json at: 'kind') = 'calendar#event'
+	self should: [ dictResult at: 'error' ] raise: Error.
+	cloudEvent := (NeoJSONReader on: json readStream) nextAs: GoogleEvent.
+
+	garbageEvent := dictResult at: 'id'.
+
+
+	self assert: (dictResult at: 'description') = '|'
 ]
 
 { #category : #tests }
@@ -110,4 +132,33 @@ GoogleCalendarClientTest >> testEvents_list [
 	self should: [json at: 'error'] raise: Error.
 
 	self assert: (json at: 'kind') = 'calendar#events'
+]
+
+{ #category : #tests }
+GoogleCalendarClientTest >> testEvents_update [
+
+	| dictResult json cloudEvent newDescription |
+	self assert: client canCallAPI.
+	json := self createEvent.
+	dictResult := (NeoJSONReader on: json readStream)
+		              propertyNamesAsSymbols: true;
+		              next.
+
+
+	self should: [ dictResult at: 'error' ] raise: Error.
+	cloudEvent := (NeoJSONReader on: json readStream) nextAs: GoogleEvent.
+	cloudEvent description:
+		(newDescription := cloudEvent description , '|').
+
+	dictResult := (NeoJSONReader on:
+			               (client
+				                event_update: self bodegaCalendarId
+				                eventElement: cloudEvent) readStream)
+		              propertyNamesAsSymbols: true;
+		              next.
+	garbageEvent := dictResult at: 'id'.
+
+	self should: [ dictResult at: 'error' ] raise: Error.
+
+	self assert: (dictResult at: 'description') = newDescription
 ]

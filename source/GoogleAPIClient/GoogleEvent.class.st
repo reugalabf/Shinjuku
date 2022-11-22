@@ -206,24 +206,21 @@ GoogleEvent class >> neoJsonMapping: mapper [
 			   transparency visibility iCalUID sequence attendeesOmitted
 			   extendedProperties hangoutLink conferenceData gadget anyoneCanAddSelf
 			   guestsCanInviteOthers guestsCanModify guestsCanSeeOtherGuests
-			   privateCopy locked reminders source attachments eventType ).
-		(mapping mapInstVar: #created) valueSchema: #TimeStamp.
-		(mapping mapInstVar: #updated) valueSchema: #TimeStamp.
-		(mapping mapInstVar: #created) valueSchema: EventParty.
+			   privateCopy locked reminders source attachments eventType  ).
+		"(mapping mapInstVar: #created) valueSchema: #TimeStamp.
+		(mapping mapInstVar: #updated) valueSchema: #TimeStamp."
+
 		(mapping mapInstVar: #start) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #end) valueSchema: #TimeStamp.
-		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp.
-		(mapping mapInstVar: #created) valueSchema: #ArrayOfEventParty ].
+		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp ].
 	mapper
 		for: #TimeStamp
 		customDo: [ :mapping | "date dateTime timeZone"
 			mapping encoder: [ :obj | 
 				Dictionary new
-					at: 'dateTime'
-					put: obj asDate yyyymmdd , 'T' , obj hhmmss , 'Z';
-					"at: 'timeZone' put: 'America/Argentina/Cordoba';"
-					yourself
-				"at: 'date' put: obj asDate yyyymmdd;" ].
+					at: 'dateTime' put: obj asDate yyyymmdd , 'T' , obj hhmmss , 'Z';
+					"at: 'date' put: obj asDate yyyymmdd;""at: 'timeZone' put: 'America/Argentina/Cordoba';"
+						yourself ].
 			mapping decoder: [ :obj | 
 				DateAndTime fromString: (obj at: #dateTime)
 				"(obj at: #date) , 'T' ," ] ].

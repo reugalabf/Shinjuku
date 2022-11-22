@@ -98,10 +98,12 @@ GoogleEventsAPI >> updateEvent: event ofCalendar: calendarId [
 			        prettyPrint: true;
 			        "mapInstVarsFor: PlaceAndTime ;"nextPut: event ].
 
-	^ (self putRequestForURL:
-		   ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
-			    expandMacrosWith: calendarId
-			    with: event id)) headers at: 'application/json' put: json
+	^ self
+		  putRequestForURL:
+			  ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events/<2s>'
+				   expandMacrosWith: calendarId
+				   with: event id)
+		  contents: json
 ]
 
 { #category : #'service api' }

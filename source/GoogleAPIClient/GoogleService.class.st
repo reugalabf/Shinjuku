@@ -126,6 +126,7 @@ GoogleService >> putRequestForURL: requestUrl [
 	"calendarId is a String"
 
 	| client |
+	self halt.
 	client := ZnClient new.
 	client put: requestUrl.
 	client request headers
@@ -134,6 +135,31 @@ GoogleService >> putRequestForURL: requestUrl [
 	client request headers at: 'Accept' put: 'application/json'.
 	"client request writeToTranscript."
 	^ client execute
+]
+
+{ #category : #'http request' }
+GoogleService >> putRequestForURL: requestUrl contents: contentString [
+
+	
+	"calendarId is a String"
+
+	| client result |
+	client := ZnClient new.
+
+
+	client request headers
+		at: 'Authorization'
+		put: 'Bearer ' , self liveAccessToken.
+	client request headers at: 'Accept' put: 'application/json'.
+	client request headers at: 'Content-Type' put: 'application/json'.
+
+	client url: requestUrl.
+	contentString isEmptyOrNil ifFalse: [ 
+		client entity:
+			(ZnEntity with: contentString type: ZnMimeType applicationJson) ].
+	result := client put.
+	client request writeToTranscript.
+	^ result
 ]
 
 { #category : #accessing }
