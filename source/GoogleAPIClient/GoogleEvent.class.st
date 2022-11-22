@@ -206,13 +206,22 @@ GoogleEvent class >> neoJsonMapping: mapper [
 			   transparency visibility iCalUID sequence attendeesOmitted
 			   extendedProperties hangoutLink conferenceData gadget anyoneCanAddSelf
 			   guestsCanInviteOthers guestsCanModify guestsCanSeeOtherGuests
-			   privateCopy locked reminders source attachments eventType  ).
-		"(mapping mapInstVar: #created) valueSchema: #TimeStamp.
-		(mapping mapInstVar: #updated) valueSchema: #TimeStamp."
+			   privateCopy locked reminders source attachments eventType ).
+
+		(mapping mapInstVar: #created) valueSchema: #DateAndTime.
+		(mapping mapInstVar: #updated) valueSchema: #DateAndTime.
+
+		(mapping mapInstVar: #creator) valueSchema: EventParty.
+		(mapping mapInstVar: #organizer) valueSchema: EventParty.
+
+		(mapping mapInstVar: #attendees) valueSchema: #ArrayOfEventParty.
+
 
 		(mapping mapInstVar: #start) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #end) valueSchema: #TimeStamp.
-		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp ].
+		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp
+
+		"" ].
 	mapper
 		for: #TimeStamp
 		customDo: [ :mapping | "date dateTime timeZone"
@@ -224,7 +233,18 @@ GoogleEvent class >> neoJsonMapping: mapper [
 			mapping decoder: [ :obj | 
 				DateAndTime fromString: (obj at: #dateTime)
 				"(obj at: #date) , 'T' ," ] ].
+
+	mapper
+		for: #DateAndTime
+		customDo: [ :mapping | "date dateTime timeZone"
+			mapping encoder: [ :obj | obj asDate yyyymmdd ].
+			mapping decoder: [ :obj | DateAndTime fromString: obj ] ].
+
 	mapper mapInstVarsFor: EventParty.
+
+
+
+
 	mapper
 		for: #ArrayOfEventParty
 		customDo: [ :mapping | mapping listOfElementSchema: EventParty ]
