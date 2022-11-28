@@ -83,6 +83,14 @@ json inspect.
 ]
 
 { #category : #tests }
+GoogleCalendarClientTest >> testEvents_delete [
+
+	"the tearDown method calls event delete  "
+
+	self assert: true
+]
+
+{ #category : #tests }
 GoogleCalendarClientTest >> testEvents_get [
 
 	| json response |
