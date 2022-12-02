@@ -60,8 +60,11 @@ ZnGoogleOAuth2Session >> updateTokens: tokenData [
 	[ super updateTokens: tokenData ]
 		on: ZnAuthError
 		do: [ :ex | 
+			| f |
 			refreshToken := nil.
-			self storeOn: self storeFileName writeStream.
+			self storeFileName delete.
+			(f := self storeFileName) exists ifTrue: [ 
+				('The session file was not deleted' -> f) inspect ].
 			ex signal ].
 
 
