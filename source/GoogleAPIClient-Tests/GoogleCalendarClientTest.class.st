@@ -31,6 +31,18 @@ GoogleCalendarClientTest >> createEvent [
 				   yourself)
 ]
 
+{ #category : #tests }
+GoogleCalendarClientTest >> createEvent2 [
+
+	^ client
+		  event_insert: self bodegaCalendarId
+		  eventElement: (GoogleEvent new
+				   description: '|';
+				   end: (DateAndTime fromString: '2022-11-07T11:00:00-03:00');
+				   start: (DateAndTime fromString: '2022-11-07T11:11:00-03:00');
+				   yourself)
+]
+
 { #category : #running }
 GoogleCalendarClientTest >> setUp [
 
@@ -113,6 +125,26 @@ GoogleCalendarClientTest >> testEvents_insert [
 	| dictResult json cloudEvent |
 	self assert: client canCallAPI.
 	json := self createEvent.
+	dictResult := (NeoJSONReader on: json readStream)
+		              propertyNamesAsSymbols: true;
+		              next.
+
+
+	self should: [ dictResult at: 'error' ] raise: Error.
+	cloudEvent := (NeoJSONReader on: json readStream) nextAs: GoogleEvent.
+
+	garbageEvent := dictResult at: 'id'.
+
+
+	self assert: (dictResult at: 'description') = '|'
+]
+
+{ #category : #tests }
+GoogleCalendarClientTest >> testEvents_insert2 [
+
+	| dictResult json cloudEvent |
+	self assert: client canCallAPI.
+	json := self createEvent2.
 	dictResult := (NeoJSONReader on: json readStream)
 		              propertyNamesAsSymbols: true;
 		              next.
