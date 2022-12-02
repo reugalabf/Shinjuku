@@ -55,7 +55,14 @@ ZnGoogleOAuth2Session >> storeOn: writeStream [
 { #category : #'*GoogleAPIClient' }
 ZnGoogleOAuth2Session >> updateTokens: tokenData [
 
-	super updateTokens: tokenData.
+	[ super updateTokens: tokenData ]
+		on: ZnAuthError
+		do: [ :ex | 
+			refreshToken := nil.
+			self storeOn: self storeFileName writeStream.
+			ex signal ].
+
+
 	(refreshToken notNil and: [ self storeFileName exists not ]) ifTrue: [ 
-		self storeOn:  self storeFileName writeStream  ]
+		self storeOn: self storeFileName writeStream ]
 ]
