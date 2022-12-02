@@ -19,8 +19,10 @@ ZnGoogleOAuth2Session >> retrieveFrom: readStream [
 	dataDict := (NeoJSONReader on: readStream) next.
 	((dataDict at: #key) = consumerData key and: [ 
 		 (dataDict at: #secret) = consumerData secret ]) ifFalse: [ ^ self ].
-	refreshToken := dataDict at: #refreshToken.
-	self liveAccessToken
+
+	(dataDict at: #refreshToken) ifNotNil: [ :obj | 
+		refreshToken := obj.
+		self liveAccessToken ]
 ]
 
 { #category : #'*GoogleAPIClient' }

@@ -48,9 +48,10 @@ GoogleCalendarClientTest >> setUp [
 
 	super setUp.
 
-	client := GoogleCalendarClient fromJson: 'calendarClientSettings.json'.
+	client := GoogleCalendarClient fromJson:
+		          'calendarClientSettings.json'
+
 	"garbageEvent := OrderedCollection new."
-	
 ]
 
 { #category : #running }
