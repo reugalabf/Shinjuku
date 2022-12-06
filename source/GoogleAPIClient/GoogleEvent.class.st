@@ -227,8 +227,8 @@ GoogleEvent class >> neoJsonMapping: mapper [
 		customDo: [ :mapping | "date dateTime timeZone"
 			mapping encoder: [ :obj | 
 				Dictionary new
-					at: 'dateTime' put: obj asDate yyyymmdd , 'T' , obj hhmmss , 'Z';
-					"at: 'date' put: obj asDate yyyymmdd;""at: 'timeZone' put: 'America/Argentina/Cordoba';"
+					at: 'dateTime' put: obj asDate yyyymmdd , 'T' , obj hhmmss , obj offset hhmm;
+
 						yourself ].
 			mapping decoder: [ :obj | 
 				DateAndTime fromString: (obj at: #dateTime)
