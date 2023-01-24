@@ -18,8 +18,8 @@ BaselineOfGoogleAPIClient >> baseline: spec [
 			package: #'GoogleAPIClient-Tests'
 			with: [ spec requires: #( 'GoogleAPIClient' ) ].
 		spec
-			group: 'Core' with: #( 'OpenWeatherMap' );
-			group: 'Tests' with: #( 'OpenWeatherMap-Tests' );
+			group: 'Core' with: #( 'GoogleAPIClient' );
+			group: 'Tests' with: #( 'GoogleAPIClient-Tests' );
 			group: 'default' with: #( 'Core' 'Tests' ) ]
 ]
 
