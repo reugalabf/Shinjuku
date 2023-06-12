@@ -55,6 +55,18 @@ GoogleCalendarClientTest >> createEvent3 [
 				   yourself)
 ]
 
+{ #category : #tests }
+GoogleCalendarClientTest >> createEvent4 [
+
+	^ client
+		  event_insert: self bodegaCalendarId
+		  eventElement: (GoogleEvent new
+				   description: 'Query: ', DateAndTime now printString;
+				   end: (DateAndTime fromString: '2022-11-07T13:00:00-00:00');
+				   start: (DateAndTime fromString: '2022-11-07T12:00:00-00:00');
+				   yourself)
+]
+
 { #category : #running }
 GoogleCalendarClientTest >> setUp [
 
@@ -205,6 +217,38 @@ GoogleCalendarClientTest >> testEvents_list [
 	self should: [json at: 'error'] raise: Error.
 
 	self assert: (json at: 'kind') = 'calendar#events'
+]
+
+{ #category : #tests }
+GoogleCalendarClientTest >> testEvents_query [
+
+	| dictResult json cloudEvent newDescription |
+	self assert: client canCallAPI.
+	json := self createEvent4.
+	dictResult := (NeoJSONReader on: json readStream)
+		              propertyNamesAsSymbols: true;
+		              next.
+
+
+	self should: [ dictResult at: 'error' ] raise: Error.
+	cloudEvent := (NeoJSONReader on: json readStream) nextAs: GoogleEvent.
+	
+	"TODO. LIST EVENT WITH q paremeter that matches description"
+	
+"	cloudEvent description:
+		(newDescription := cloudEvent description , '|').
+"
+"	dictResult := (NeoJSONReader on:
+			               (client
+				                event_update: self bodegaCalendarId
+				                eventElement: cloudEvent) readStream)
+		              propertyNamesAsSymbols: true;
+		              next.
+	garbageEvent := dictResult at: 'id'.
+
+	self should: [ dictResult at: 'error' ] raise: Error.
+
+	self assert: (dictResult at: 'description') = newDescription"
 ]
 
 { #category : #tests }

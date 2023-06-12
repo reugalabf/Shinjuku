@@ -65,6 +65,13 @@ GoogleEventsAPI >> list:calendarId [
 ]
 
 { #category : #'service api' }
+GoogleEventsAPI >> list:calendarId queryString: aString [
+"GET https://www.googleapis.com/calendar/v3/calendars/calendarId/events"
+
+^self getRequestForURL: ('https://www.googleapis.com/calendar/v3/calendars/<1s>/events' expandMacrosWith: calendarId  )
+]
+
+{ #category : #'service api' }
 GoogleEventsAPI >> moveEvent: eventId ofCalendar: calendarId toCalendar: newCalendarId [
 
 	"POST https://www.googleapis.com/calendar/v3/calendars/calendarId/events/eventId/move
