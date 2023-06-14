@@ -18,16 +18,11 @@ Class {
 GoogleSpreadsheet class >> neoJsonMapping: mapper [
 "id properties sheets namedRanges url developerMetadata dataSources dataSourceSchedules"
 self halt.
-"mapper for: self do: [ :mapping | 
+mapper for: self do: [ :mapping | 
 		mapping mapInstVars:
-			#( kind etag id status htmlLink summary description location
-			   colorId endTimeUnspecified recurrence recurringEventId
-			   transparency visibility iCalUID sequence attendeesOmitted
-			   extendedProperties hangoutLink conferenceData gadget anyoneCanAddSelf
-			   guestsCanInviteOthers guestsCanModify guestsCanSeeOtherGuests
-			   privateCopy locked reminders source attachments eventType ).
+			#( id properties sheets namedRanges url developerMetadata dataSources dataSourceSchedules ).
 
-		(mapping mapInstVar: #created) valueSchema: #DateAndTime.
+		"(mapping mapInstVar: #created) valueSchema: #DateAndTime.
 		(mapping mapInstVar: #updated) valueSchema: #DateAndTime.
 
 		(mapping mapInstVar: #creator) valueSchema: EventParty.
@@ -39,9 +34,9 @@ self halt.
 		(mapping mapInstVar: #start) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #end) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp
-
-		"""" ].
-	mapper
+"
+		 ].
+"	mapper
 		for: #TimeStamp
 		customDo: [ :mapping | ""date dateTime timeZone""
 			mapping encoder: [ :obj | 
@@ -60,9 +55,6 @@ self halt.
 			mapping decoder: [ :obj | DateAndTime fromString: obj ] ].
 
 	mapper mapInstVarsFor: EventParty.
-
-
-
 
 	mapper
 		for: #ArrayOfEventParty
