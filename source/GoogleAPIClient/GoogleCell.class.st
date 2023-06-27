@@ -15,5 +15,5 @@ Class {
 		'dataSourceTable',
 		'dataSourceFormula'
 	],
-	#category : #'GoogleAPIClient-SpreadSheetEntities'
+	#category : #'GoogleAPIClient-SpreadsheetEntities'
 }

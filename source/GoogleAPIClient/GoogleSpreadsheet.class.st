@@ -11,7 +11,7 @@ Class {
 		'dataSources',
 		'dataSourceSchedules'
 	],
-	#category : #'GoogleAPIClient-SpreadSheetEntities'
+	#category : #'GoogleAPIClient-SpreadsheetEntities'
 }
 
 { #category : #accessing }

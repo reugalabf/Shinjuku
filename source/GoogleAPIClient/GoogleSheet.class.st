@@ -16,5 +16,5 @@ Class {
 		'columnGroups',
 		'slicers'
 	],
-	#category : #'GoogleAPIClient-SpreadSheetEntities'
+	#category : #'GoogleAPIClient-SpreadsheetEntities'
 }

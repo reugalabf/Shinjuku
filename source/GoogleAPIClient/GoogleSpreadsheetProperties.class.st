@@ -10,7 +10,7 @@ Class {
 		'iterativeCalculationSettings',
 		'spreadsheetTheme'
 	],
-	#category : #'GoogleAPIClient-SpreadSheetEntities'
+	#category : #'GoogleAPIClient-SpreadsheetEntities'
 }
 
 { #category : #accessing }
