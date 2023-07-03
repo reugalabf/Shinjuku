@@ -11,13 +11,13 @@ initializationBlocks: (OrderedCollection new:[:session| session beConsentPrompt;
 
 "
 Class {
-	#name : #GoogleAuthenticationServerBuilder,
+	#name : #GoogleAuthenticationServerFactory,
 	#superclass : #Object,
 	#category : #'GoogleAPIClient-IdentityAuthentication'
 }
 
 { #category : #private }
-GoogleAuthenticationServerBuilder class >> delegateKey: aKey secret: aSecret redirect: aUrl [
+GoogleAuthenticationServerFactory class >> delegateKey: aKey secret: aSecret redirect: aUrl [
 
 	^ ZnServerGoogleSSODelegate new
 		  googleData:
@@ -26,7 +26,7 @@ GoogleAuthenticationServerBuilder class >> delegateKey: aKey secret: aSecret red
 ]
 
 { #category : #private }
-GoogleAuthenticationServerBuilder class >> getServerOn: aPort [
+GoogleAuthenticationServerFactory class >> getServerOn: aPort [
 
 	^ ZnServer defaultServerClass  allInstances
 		  detect: [ :each | each port = aPort ]
@@ -34,7 +34,7 @@ GoogleAuthenticationServerBuilder class >> getServerOn: aPort [
 ]
 
 { #category : #building }
-GoogleAuthenticationServerBuilder class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks [
+GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks [
 
 	| srv delegate |
 	delegate := self delegateKey: aKey secret: aSecret redirect: aUrl.

@@ -48,7 +48,7 @@ GoogleServiceClient >> authenticationPort [
 { #category : #initialization }
 GoogleServiceClient >> buildAuthenticationServer [
 
-	^ GoogleAuthenticationServerBuilder
+	^ GoogleAuthenticationServerFactory
 		  port: self authenticationPort
 		  key: self serviceKey
 		  secret: self serviceSecret
