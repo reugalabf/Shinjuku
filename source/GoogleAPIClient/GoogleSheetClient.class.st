@@ -4,6 +4,15 @@ Class {
 	#category : #'GoogleAPIClient-Client'
 }
 
+{ #category : #testing }
+GoogleSheetClient >> canCallAPI [
+
+	^ authenticationServer isRunning and: [( 
+		  authenticationServer sessionManager hasSessionForKey:
+			  'google-session') and:[(authenticationServer sessionManager sessionForKey:
+			  'google-session')isLive]]
+]
+
 { #category : #initialization }
 GoogleSheetClient >> initBlocks [ 
 	^ OrderedCollection

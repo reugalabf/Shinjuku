@@ -1,7 +1,7 @@
 "
 It builds the authentication (OAuth2) infrastructure
 
-GoogleAuthenticationServerBuilder 
+GoogleAuthenticationServerFactory
 port: '8100' 
 key: '984973766290-6uf0t0ujs2a8erap02s9kh20ts1c69ge.apps.googleusercontent.com' 
 secret: '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' 
