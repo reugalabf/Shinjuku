@@ -2,11 +2,11 @@ Class {
 	#name : #GoogleSpreadsheet,
 	#superclass : #Object,
 	#instVars : [
-		'id',
+		'spreadsheetId',
 		'properties',
 		'sheets',
 		'namedRanges',
-		'url',
+		'spreadsheetUrl',
 		'developerMetadata',
 		'dataSources',
 		'dataSourceSchedules'
@@ -17,10 +17,10 @@ Class {
 { #category : #accessing }
 GoogleSpreadsheet class >> neoJsonMapping: mapper [
 "id properties sheets namedRanges url developerMetadata dataSources dataSourceSchedules"
-self halt.
+
 mapper for: self do: [ :mapping | 
 		mapping mapInstVars:
-			#( id properties sheets namedRanges url developerMetadata dataSources dataSourceSchedules ).
+			#( spreadsheetId properties sheets namedRanges spreadsheetUrl developerMetadata dataSources dataSourceSchedules ).
 
 		"(mapping mapInstVar: #created) valueSchema: #DateAndTime.
 		(mapping mapInstVar: #updated) valueSchema: #DateAndTime.

@@ -1,6 +1,11 @@
 Class {
 	#name : #GoogleSheetClient,
 	#superclass : #GoogleServiceClient,
+	#instVars : [
+		'spreadsheetAPI',
+		'sheetsAPI',
+		'sheetValuesAPI'
+	],
 	#category : #'GoogleAPIClient-Client'
 }
 
@@ -28,4 +33,23 @@ GoogleSheetClient >> initBlocks [
 					   'https://www.googleapis.com/auth/drive.readonly '
 					   with: 'https://www.googleapis.com/auth/spreadsheets'
 					with:'https://www.googleapis.com/auth/spreadsheets.readonly') ]
+]
+
+{ #category : #initialization }
+GoogleSheetClient >> initializeSettings: aDictionary [
+
+	super initializeSettings: aDictionary.
+	spreadsheetAPI := GoogleSpreadsheetsAPI withSessionManager:
+		                  authenticationServer sessionManager.
+	sheetsAPI := GoogleSheetsAPI withSessionManager:
+		             authenticationServer sessionManager.
+	sheetValuesAPI := GoogleSheetValuesAPI withSessionManager:
+		                  authenticationServer sessionManager.
+	^ self
+]
+
+{ #category : #spreadsheetAPI }
+GoogleSheetClient >> spreadsheet_get: spredsheetId [
+
+	^ spreadsheetAPI getSpreadsheet:  spredsheetId
 ]

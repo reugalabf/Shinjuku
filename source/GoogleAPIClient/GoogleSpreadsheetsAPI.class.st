@@ -22,4 +22,8 @@ GoogleSpreadsheetsAPI >> getByDataFilterSpreadsheet:aGoogleSpreadsheetId [
 { #category : #spreadsheets }
 GoogleSpreadsheetsAPI >> getSpreadsheet:aGoogleSpreadsheetId [
 "GET https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}"
+
+	^ self getRequestForURL:
+		  ('https://sheets.googleapis.com/v4/spreadsheets/<1s>' 
+			   expandMacrosWith: aGoogleSpreadsheetId )
 ]
