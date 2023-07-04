@@ -16,13 +16,24 @@ Class {
 
 { #category : #accessing }
 GoogleSpreadsheet class >> neoJsonMapping: mapper [
-"id properties sheets namedRanges url developerMetadata dataSources dataSourceSchedules"
 
-mapper for: self do: [ :mapping | 
+	"id properties sheets namedRanges url developerMetadata dataSources dataSourceSchedules"
+
+	mapper for: self do: [ :mapping | 
 		mapping mapInstVars:
-			#( spreadsheetId properties sheets namedRanges spreadsheetUrl developerMetadata dataSources dataSourceSchedules ).
+			#( spreadsheetId properties namedRanges spreadsheetUrl
+			   developerMetadata dataSources dataSourceSchedules ). "sheets"
 
-		"(mapping mapInstVar: #created) valueSchema: #DateAndTime.
+		(mapping mapInstVar: #sheets) valueSchema: #ArrayOfSheet ].
+
+	mapper mapInstVarsFor: GoogleSheet. 
+
+	mapper
+		for: #ArrayOfSheet
+		customDo: [ :mapping | mapping listOfElementSchema: GoogleSheet ]
+
+
+	"(mapping mapInstVar: #created) valueSchema: #DateAndTime.
 		(mapping mapInstVar: #updated) valueSchema: #DateAndTime.
 
 		(mapping mapInstVar: #creator) valueSchema: EventParty.
@@ -35,8 +46,8 @@ mapper for: self do: [ :mapping |
 		(mapping mapInstVar: #end) valueSchema: #TimeStamp.
 		(mapping mapInstVar: #originalStartTime) valueSchema: #TimeStamp
 "
-		 ].
-"	mapper
+
+	"	mapper
 		for: #TimeStamp
 		customDo: [ :mapping | ""date dateTime timeZone""
 			mapping encoder: [ :obj | 

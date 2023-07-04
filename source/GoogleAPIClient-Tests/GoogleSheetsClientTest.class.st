@@ -63,3 +63,21 @@ GoogleSheetsClientTest >> testSpreadsheetGetObject [
 dictResult inspect.
 	spreadsheet inspect
 ]
+
+{ #category : #tests }
+GoogleSheetsClientTest >> testSpreadsheetGetObjectWithData [
+
+	| spreadsheet json keys dictResult |
+	self assert: client canCallAPI.
+	dictResult := (NeoJSONReader on: (json := client spreadsheet_get:
+					                        '1K8R6SdqK-U3_3HI5l50dBwCLuTZkKdYVlOk_d2lX6wI' includeGridData: true)
+				               readStream)
+		              propertyNamesAsSymbols: true;
+		              next.
+
+	self should: [ dictResult at: 'error' ] raise: Error.
+	spreadsheet := (NeoJSONReader on: json readStream) nextAs:
+		               GoogleSpreadsheet.
+
+	spreadsheet inspect
+]

@@ -53,3 +53,11 @@ GoogleSheetClient >> spreadsheet_get: spredsheetId [
 
 	^ spreadsheetAPI getSpreadsheet:  spredsheetId
 ]
+
+{ #category : #spreadsheetAPI }
+GoogleSheetClient >> spreadsheet_get: spredsheetId includeGridData: aBoolean [
+
+	^ spreadsheetAPI
+		  getSpreadsheet: spredsheetId
+		  includeGridData: aBoolean
+]

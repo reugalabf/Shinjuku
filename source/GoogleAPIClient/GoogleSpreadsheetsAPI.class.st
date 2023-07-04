@@ -11,7 +11,7 @@ GoogleSpreadsheetsAPI >> batchUpdateSpreadsheet:aGoogleSpreadsheetId [
 
 { #category : #spreadsheets }
 GoogleSpreadsheetsAPI >> createSpreadsheet [
-"https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create"
+"POST https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create"
 ]
 
 { #category : #spreadsheets }
@@ -20,10 +20,18 @@ GoogleSpreadsheetsAPI >> getByDataFilterSpreadsheet:aGoogleSpreadsheetId [
 ]
 
 { #category : #spreadsheets }
-GoogleSpreadsheetsAPI >> getSpreadsheet:aGoogleSpreadsheetId [
+GoogleSpreadsheetsAPI >> getSpreadsheet: aGoogleSpreadsheetId [
+
+	"GET https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}"
+
+	^ self getSpreadsheet: aGoogleSpreadsheetId includeGridData: false
+]
+
+{ #category : #spreadsheets }
+GoogleSpreadsheetsAPI >> getSpreadsheet:aGoogleSpreadsheetId includeGridData: aBoolean [
 "GET https://sheets.googleapis.com/v4/spreadsheets/{spreadsheetId}"
 
 	^ self getRequestForURL:
-		  ('https://sheets.googleapis.com/v4/spreadsheets/<1s>' 
-			   expandMacrosWith: aGoogleSpreadsheetId )
+		  ('https://sheets.googleapis.com/v4/spreadsheets/<1s>?includeGridData=<2p>' 
+			   expandMacrosWith: aGoogleSpreadsheetId with: aBoolean )
 ]
