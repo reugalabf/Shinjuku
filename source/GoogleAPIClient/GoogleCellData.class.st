@@ -20,19 +20,24 @@ Class {
 
 { #category : #accessing }
 GoogleCellData class >> neoJsonMapping: mapper [
-"userEnteredValue effectiveValue formattedValue userEnteredFormat effectiveFormat hyperlink note textFormatRuns dataValidation pivotTable dataSourceTable dataSourceFormula"
+
+	"userEnteredValue effectiveValue formattedValue userEnteredFormat effectiveFormat hyperlink note textFormatRuns dataValidation pivotTable dataSourceTable dataSourceFormula"
 
 	mapper for: self do: [ :mapping | 
 		mapping mapInstVars:
-			#(  effectiveValue formattedValue userEnteredFormat effectiveFormat hyperlink note textFormatRuns dataValidation pivotTable dataSourceTable dataSourceFormula ). 
+			#( effectiveValue formattedValue userEnteredFormat
+			   effectiveFormat hyperlink note textFormatRuns dataValidation
+			   pivotTable dataSourceTable dataSourceFormula ).
 
-		(mapping mapInstVar: #userEnteredValue) valueSchema: GoogleExtendedValue ].
+		(mapping mapInstVar: #userEnteredValue) valueSchema:
+			GoogleExtendedValue.
+		(mapping mapInstVar: #effectiveValue) valueSchema:
+			GoogleExtendedValue ]
 
-"	mapper mapInstVarsFor: GoogleRowData. 
+	"	mapper mapInstVarsFor: GoogleRowData. 
 
 	mapper
 		for: #ArrayOfRowData
 		customDo: [ :mapping | mapping listOfElementSchema: GoogleRowData ]
 "
-
 ]
