@@ -11,7 +11,7 @@ GoogleSpreadsheetsAPI >> batchUpdateSpreadsheet:aGoogleSpreadsheetId [
 
 { #category : #spreadsheets }
 GoogleSpreadsheetsAPI >> createSpreadsheet [
-"POST https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create"
+"POST https://developers.google.com/sheets/api/reference/rest/v4/spreadsheets/create"		
 ]
 
 { #category : #spreadsheets }

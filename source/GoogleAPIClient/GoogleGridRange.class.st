@@ -12,7 +12,7 @@ endColumnIndex: integer. The end column (exclusive) of the range, or not set if 
 
 "
 Class {
-	#name : #GridRange,
+	#name : #GoogleGridRange,
 	#superclass : #Object,
 	#instVars : [
 		'sheetId',

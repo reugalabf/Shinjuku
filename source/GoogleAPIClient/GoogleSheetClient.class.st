@@ -30,7 +30,7 @@ GoogleSheetClient >> initBlocks [
 					   with: 'https://www.googleapis.com/auth/drive'
 					   with: 'https://www.googleapis.com/auth/drive.file'
 					   with:
-					   'https://www.googleapis.com/auth/drive.readonly '
+					   'https://www.googleapis.com/auth/drive.readonly'
 					   with: 'https://www.googleapis.com/auth/spreadsheets'
 					with:'https://www.googleapis.com/auth/spreadsheets.readonly') ]
 ]

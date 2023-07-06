@@ -84,7 +84,7 @@ GoogleCalendarClient >> initBlocks [
 					   with: 'https://www.googleapis.com/auth/calendar.readonly'
 					   with: 'https://www.googleapis.com/auth/calendar'
 					   with:
-					   'https://www.googleapis.com/auth/calendar.events.readonly '
+					   'https://www.googleapis.com/auth/calendar.events.readonly'
 					   with: 'https://www.googleapis.com/auth/calendar.events') ]
 ]
 

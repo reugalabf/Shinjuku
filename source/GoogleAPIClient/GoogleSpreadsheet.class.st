@@ -26,7 +26,7 @@ GoogleSpreadsheet class >> neoJsonMapping: mapper [
 
 		(mapping mapInstVar: #sheets) valueSchema: #ArrayOfSheet ].
 
-	mapper mapInstVarsFor: GoogleSheet. 
+
 
 	mapper
 		for: #ArrayOfSheet
