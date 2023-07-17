@@ -46,6 +46,6 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 		       yourself.
 	(srv hasSessionForKey: 'google-session') ifFalse: [ 
 		[ZnEasy get: ('http://localhost:<1s>/sso-google' expandMacrosWith:
-				 aPort printString)] forkAt:70 ].
+				 aPort printString)] forkAt:Processor timingPriority ].
 	^ srv
 ]
