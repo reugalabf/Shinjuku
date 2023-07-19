@@ -28,15 +28,15 @@ GoogleAuthenticationServerFactory class >> delegateKey: aKey secret: aSecret red
 { #category : #private }
 GoogleAuthenticationServerFactory class >> getServerOn: aPort [
 
-	^ ZnServer defaultServerClass  allInstances
-		  detect: [ :each | each port = aPort ]
+	^ ZnServer defaultServerClass allInstances
+		  detect: [ :each | each port = aPort and: [ each isListening ] ]
 		  ifNone: [ ZnServer startOn: aPort ]
 ]
 
 { #category : #building }
 GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks [
 
-	| srv delegate |
+	| srv delegate response |
 	delegate := self delegateKey: aKey secret: aSecret redirect: aUrl.
 	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock ].
 
@@ -44,8 +44,12 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 	srv := (self getServerOn: aPort)
 		       delegate: delegate;
 		       yourself.
+
 	(srv hasSessionForKey: 'google-session') ifFalse: [ 
-		[ZnEasy get: ('http://localhost:<1s>/sso-google' expandMacrosWith:
-				 aPort printString)] forkAt:Processor timingPriority ].
+		[ 
+		response := ZnEasy get:
+			            ('http://localhost:<1s>/sso-google' expandMacrosWith:
+				             aPort printString) ] value ].
+
 	^ srv
 ]

@@ -13,7 +13,7 @@ Class {
 GoogleSheetClient >> canCallAPI [
 
 	^ authenticationServer isRunning and: [ 
-		  (authenticationServer hasSessionForKey: 'google-session') or: [ 
+		  (authenticationServer hasSessionForKey: 'google-session') and: [ 
 			  (authenticationServer sessionManager sessionForKey:
 				   'google-session') isLive ] ]
 ]

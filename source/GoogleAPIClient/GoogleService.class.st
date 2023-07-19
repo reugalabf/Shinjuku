@@ -126,7 +126,6 @@ GoogleService >> putRequestForURL: requestUrl [
 	"calendarId is a String"
 
 	| client |
-	self halt.
 	client := ZnClient new.
 	client put: requestUrl.
 	client request headers

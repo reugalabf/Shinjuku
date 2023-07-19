@@ -14,7 +14,8 @@ GoogleSheetsClientTest >> setUp [
 	super setUp.
 
 	client := GoogleSheetClient  fromJson:
-		          'sheetsClientSettings.json'
+		          'sheetsClientSettings.json'.
+			
 
 	"garbageEvent := OrderedCollection new."
 ]
@@ -22,7 +23,18 @@ GoogleSheetsClientTest >> setUp [
 { #category : #tests }
 GoogleSheetsClientTest >> testClientConnect [
 
+	client canCallAPI.
 	self assert: client canCallAPI
+]
+
+{ #category : #tests }
+GoogleSheetsClientTest >> testClientCreationConnect [
+
+
+	client := GoogleSheetClient  fromJson:
+		          'sheetsClientSettings.json'.
+	self assert: client canCallAPI
+
 ]
 
 { #category : #tests }
