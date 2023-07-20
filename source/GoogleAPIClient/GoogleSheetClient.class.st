@@ -9,30 +9,15 @@ Class {
 	#category : #'GoogleAPIClient-Client'
 }
 
-{ #category : #testing }
-GoogleSheetClient >> canCallAPI [
-
-	^ authenticationServer isRunning and: [ 
-		  (authenticationServer hasSessionForKey: 'google-session') and: [ 
-			  (authenticationServer sessionManager sessionForKey:
-				   'google-session') isLive ] ]
-]
-
 { #category : #initialization }
-GoogleSheetClient >> initBlocks [ 
+GoogleSheetClient >> initBlocks [
+
 	^ OrderedCollection
 		  with: [ :session | 
 			  session
 				  beConsentPrompt;
 				  beOfflineAccessType ]
-		  with: [ :session | 
-			  		session scopes addAll: (OrderedCollection
-					   with: 'https://www.googleapis.com/auth/drive'
-					   with: 'https://www.googleapis.com/auth/drive.file'
-					   with:
-					   'https://www.googleapis.com/auth/drive.readonly'
-					   with: 'https://www.googleapis.com/auth/spreadsheets'
-					with:'https://www.googleapis.com/auth/spreadsheets.readonly') ]
+		  with: [ :session | session scopes addAll: self requiredScopes ]
 ]
 
 { #category : #initialization }
@@ -46,6 +31,17 @@ GoogleSheetClient >> initializeSettings: aDictionary [
 	sheetValuesAPI := GoogleSheetValuesAPI withSessionManager:
 		                  authenticationServer sessionManager.
 	^ self
+]
+
+{ #category : #initialization }
+GoogleSheetClient >> requiredScopes [
+
+	^ OrderedCollection
+		  with: 'https://www.googleapis.com/auth/drive'
+		  with: 'https://www.googleapis.com/auth/drive.file'
+		  with: 'https://www.googleapis.com/auth/drive.readonly'
+		  with: 'https://www.googleapis.com/auth/spreadsheets'
+		  with: 'https://www.googleapis.com/auth/spreadsheets.readonly'
 ]
 
 { #category : #spreadsheetAPI }

@@ -53,3 +53,25 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 
 	^ srv
 ]
+
+{ #category : #building }
+GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks scopes: aCollection [
+
+	| srv delegate response |
+	delegate := self delegateKey: aKey secret: aSecret redirect: aUrl.
+	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock ].
+
+
+	srv := (self getServerOn: aPort)
+		       delegate: delegate;
+		       yourself.
+
+	(srv hasSessionForKey: 'google-session' scopes: aCollection) 
+		ifFalse: [ 
+			[ 
+			response := ZnEasy get:
+				            ('http://localhost:<1s>/sso-google' expandMacrosWith:
+					             aPort printString) ] value ].
+
+	^ srv
+]

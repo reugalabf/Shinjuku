@@ -54,6 +54,23 @@ GoogleServiceClient >> buildAuthenticationServer [
 		  secret: self serviceSecret
 		  redirectTo: self redirectUrl
 		  initializationBlocks: self initBlocks
+		  scopes: self requiredScopes
+]
+
+{ #category : #testing }
+GoogleServiceClient >> canCallAPI [
+
+	"	^ authenticationServer isRunning and: [ 
+		  (authenticationServer hasSessionForKey: 'google-session' scopes: self requiredScopes) and: [ 
+			  (authenticationServer sessionManager sessionForKey:
+				   'google-session' scopes: self requiredScopes ) isLive ] ]"
+
+	| session |
+	^ authenticationServer isRunning and: [ 
+		  (session := authenticationServer sessionManager
+			              sessionForKey: 'google-session'
+			              scopes: self requiredScopes) notNil and: [ 
+			  session isLive ] ]
 ]
 
 { #category : #initialization }
@@ -87,6 +104,12 @@ GoogleServiceClient >> initializeSettings: aDictionary [
 GoogleServiceClient >> redirectUrl [
 
 	^ settings at: #url
+]
+
+{ #category : #initialization }
+GoogleServiceClient >> requiredScopes [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #initialization }

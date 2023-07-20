@@ -32,15 +32,6 @@ GoogleCalendarClient >> calendarList_list [
 	^ calendarListAPI list
 ]
 
-{ #category : #testing }
-GoogleCalendarClient >> canCallAPI [
-
-	^ authenticationServer isRunning and: [( 
-		  authenticationServer sessionManager hasSessionForKey:
-			  'google-session') and:[(authenticationServer sessionManager sessionForKey:
-			  'google-session')isLive]]
-]
-
 { #category : #events }
 GoogleCalendarClient >> event_delete: eventId calendar: calendarId [
 
@@ -79,13 +70,7 @@ GoogleCalendarClient >> initBlocks [
 			  session
 				  beConsentPrompt;
 				  beOfflineAccessType ]
-		  with: [ :session | 
-			  session scopes addAll: (OrderedCollection
-					   with: 'https://www.googleapis.com/auth/calendar.readonly'
-					   with: 'https://www.googleapis.com/auth/calendar'
-					   with:
-					   'https://www.googleapis.com/auth/calendar.events.readonly'
-					   with: 'https://www.googleapis.com/auth/calendar.events') ]
+		  with: [ :session | session scopes addAll: self requiredScopes ]
 ]
 
 { #category : #initialization }
@@ -105,4 +90,14 @@ GoogleCalendarClient >> initializeSettings: aDictionary [
 	eventsAPI := GoogleEventsAPI withSessionManager:
 		             authenticationServer sessionManager.
 	^ self
+]
+
+{ #category : #initialization }
+GoogleCalendarClient >> requiredScopes [
+
+	^ OrderedCollection
+		  with: 'https://www.googleapis.com/auth/calendar.readonly'
+		  with: 'https://www.googleapis.com/auth/calendar'
+		  with: 'https://www.googleapis.com/auth/calendar.events.readonly'
+		  with: 'https://www.googleapis.com/auth/calendar.events'
 ]

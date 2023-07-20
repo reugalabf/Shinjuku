@@ -93,14 +93,15 @@ GoogleCalendarClientTest >> testCalendarList_get [
 	self assert: client canCallAPI.
 
 	json := (NeoJSONReader on:
-			         (client calendarList_get: self bodegaCalendarId) readStream)
+			         (client calendarList_get: self bodegaCalendarId)
+				         readStream)
 		        propertyNamesAsSymbols: true;
 		        next.
 
 
 
-
-	self assert:( (json at:'kind') = 'calendar#calendarListEntry' )
+	self assert: (json at: 'error') isNil.
+	self assert: (json at: 'kind') = 'calendar#calendarListEntry'
 ]
 
 { #category : #tests }
@@ -114,9 +115,15 @@ GoogleCalendarClientTest >> testCalendarList_list [
 		        next.
 
 
-json inspect.
+	self assert: (json at: 'error') isNil.
 
 	self assert: (json at: 'kind') = 'calendar#calendarList'
+]
+
+{ #category : #tests }
+GoogleCalendarClientTest >> testClientConnect [
+
+	self assert: client halt canCallAPI
 ]
 
 { #category : #tests }
