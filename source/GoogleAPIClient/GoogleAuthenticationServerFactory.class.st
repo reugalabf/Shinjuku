@@ -46,10 +46,9 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 		       yourself.
 
 	(srv hasSessionForKey: 'google-session') ifFalse: [ 
-		[ 
 		response := ZnEasy get:
 			            ('http://localhost:<1s>/sso-google' expandMacrosWith:
-				             aPort printString) ] value ].
+				             aPort printString) ].
 
 	^ srv
 ]
@@ -68,10 +67,9 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 
 	(srv hasSessionForKey: 'google-session' scopes: aCollection) 
 		ifFalse: [ 
-			[ 
 			response := ZnEasy get:
 				            ('http://localhost:<1s>/sso-google' expandMacrosWith:
-					             aPort printString) ] value ].
+					             aPort printString) ].
 
 	^ srv
 ]

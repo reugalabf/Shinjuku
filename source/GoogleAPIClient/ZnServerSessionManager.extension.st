@@ -25,7 +25,7 @@ ZnServerSessionManager >> sessionForKey: aString [
 ZnServerSessionManager >> sessionForKey: aString scopes: aCollection [
 
 	^ sessions values
-		  detect: [ :each | each hasSessionForKey: aString ]
+		  detect: [ :each | each hasSessionForKey: aString scopes:aCollection ]
 		  ifFound: [ :obj | obj attributeAt: aString ]
 		  ifNone: [ nil ]
 ]

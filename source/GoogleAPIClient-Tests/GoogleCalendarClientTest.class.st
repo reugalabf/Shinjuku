@@ -100,7 +100,7 @@ GoogleCalendarClientTest >> testCalendarList_get [
 
 
 
-	self assert: (json at: 'error') isNil.
+	self should: [ json at: 'error' ] raise: Error.
 	self assert: (json at: 'kind') = 'calendar#calendarListEntry'
 ]
 
@@ -115,15 +115,15 @@ GoogleCalendarClientTest >> testCalendarList_list [
 		        next.
 
 
-	self assert: (json at: 'error') isNil.
 
+	self should: [ json at: 'error' ] raise: Error.
 	self assert: (json at: 'kind') = 'calendar#calendarList'
 ]
 
 { #category : #tests }
 GoogleCalendarClientTest >> testClientConnect [
 
-	self assert: client halt canCallAPI
+	self assert: client canCallAPI
 ]
 
 { #category : #tests }
@@ -167,6 +167,7 @@ GoogleCalendarClientTest >> testEvents_insert [
 
 	garbageEvent := dictResult at: 'id'.
 
+	self should: [ json at: 'error' ] raise: Error.
 
 	self assert: (dictResult at: 'description') = '|'
 ]
@@ -188,6 +189,7 @@ GoogleCalendarClientTest >> testEvents_insert2 [
 	garbageEvent := dictResult at: 'id'.
 
 
+	self should: [ json at: 'error' ] raise: Error.
 	self assert: (dictResult at: 'description') = '|'
 ]
 
@@ -207,7 +209,7 @@ GoogleCalendarClientTest >> testEvents_insert3 [
 
 	garbageEvent := dictResult at: 'id'.
 
-
+	self should: [ json at: 'error' ] raise: Error.
 	self assert: (dictResult at: 'description') = '|'
 ]
 
