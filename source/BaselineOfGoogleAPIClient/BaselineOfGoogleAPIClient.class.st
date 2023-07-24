@@ -14,7 +14,7 @@ BaselineOfGoogleAPIClient >> baseline: spec [
 		self zincHTTPComponentsBaseline: spec.
 		spec
 			package: #GoogleAPIClient
-			with: [ spec requires: #( 'NeoJSON' 'OpenWeatherMap' 'ZincHTTPComponents' ) ];
+			with: [ spec requires: #( 'NeoJSON'  'ZincHTTPComponents' ) ];
 			package: #'GoogleAPIClient-Tests'
 			with: [ spec requires: #( 'GoogleAPIClient' ) ].
 		spec
