@@ -14,7 +14,7 @@ GoogleSheetsClientTest >> setUp [
 	super setUp.
 
 	client := GoogleSheetClient  fromJson:
-		          'sheetsClientSettings.json'.
+		          'sheetsClientSettings2.json'.
 			
 
 	"garbageEvent := OrderedCollection new."

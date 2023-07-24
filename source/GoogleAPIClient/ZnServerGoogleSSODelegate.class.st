@@ -123,6 +123,7 @@ ZnServerGoogleSSODelegate >> initialize [
 	super initialize.
 
 	self prefixMap
+		at: 'sso-sheets-google' put: #ssoSheetsGoogle:;
 		at: 'sso-google' put: #ssoGoogle:;
 		at: 'sso-google-callback' put: #ssoGoogleCallback:;
 		at: 'sso-google-data' put: #ssoGoogleData:.
@@ -205,6 +206,24 @@ ZnServerGoogleSSODelegate >> ssoGoogleData: request [
 		stream << '<h3>Google UserData</h3>'.
 		self printDictionary: userData asHtmlOn: stream.
 		stream << '<a href="sso-reset">Reset</a>'  ].
+
+	entity := ZnEntity html: html. 
+	^ ZnResponse ok: entity
+]
+
+{ #category : #responses }
+ZnServerGoogleSSODelegate >> ssoSheetsGoogle: request [
+
+	| googleSession html entity |
+	
+	googleSession := self googleSessionFor: request.
+		
+	html := self htmlPageTitled: 'Zinc SSO Google Login' do: [ :stream |
+		stream
+			<< '<h3>Google SSO</h3>' ;
+			<< '<a href="' ;
+			<< googleSession authenticationUrl asString ;
+			<< '">Login with Google</a>' ].
 
 	entity := ZnEntity html: html. 
 	^ ZnResponse ok: entity
