@@ -112,7 +112,7 @@ GoogleServiceClient >> initialize [
 GoogleServiceClient >> initializeSettings: aDictionary [
 
 	((aDictionary includesKey: #port) and: [ 
-		 (aDictionary includesKey: #url) and: [ 
+		 (aDictionary includesKey: #host) and: [ 
 			 (aDictionary includesKey: #key) and: [ 
 				 (aDictionary includesKey: #secret) and: [ 
 				 aDictionary includesKey: #apiName ] ] ] ])
@@ -125,8 +125,9 @@ GoogleServiceClient >> initializeSettings: aDictionary [
 { #category : #initialization }
 GoogleServiceClient >> redirectUrl [
 
-	^ '<1s>/sso-google-callback/<2s>'
+	^ '<1s>:<2s>/sso-google-callback/<3s>'
 		  expandMacrosWith: (settings at: #host)
+		  with: (settings at: #port)
 		  with: (settings at: #apiName)
 ]
 
