@@ -93,7 +93,7 @@ ZnServerGoogleSSODelegate >> googleSessionFor: aRequest [
 
 	^ aRequest session
 		  attributeAt: sessionId
-		  ifAbsentPut: [ "'google-session'" 
+		  ifAbsentPut: [ 
 		  self buildSessionForApi: apiName ]
 ]
 
@@ -214,14 +214,17 @@ ZnServerGoogleSSODelegate >> ssoGoogle: request [
 ZnServerGoogleSSODelegate >> ssoGoogleCallback: request [
 
 	| googleSession |
-	
+	self halt.
 	(self isOAuth2Callback: request)
 		ifFalse: [ ^ self generateInvalidCallbackRequest ].
 
 	googleSession := self googleSessionFor: request.
 	googleSession handleAuthenticationCallback: request uri query.
 
-	^ ZnResponse redirect: 'sso-google-data'
+"	^ ZnResponse redirect:
+		  ('sso-google-data/<1s>' expandMacrosWith:
+			   (self apiOfRequest: request))"
+			^ZnResponse ok: (ZnEntity textCRLF: 'OK')
 ]
 
 { #category : #responses }
