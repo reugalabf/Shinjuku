@@ -17,11 +17,11 @@ Class {
 }
 
 { #category : #private }
-GoogleAuthenticationServerFactory class >> delegateKey: aKey secret: aSecret redirect: aUrl [
+GoogleAuthenticationServerFactory class >> delegateApi: apiName key: aKey secret: aSecret redirect: aUrl [
 
 	^ ZnServerGoogleSSODelegate new
-		  googleData:
-			  (ZnOAuth2ConsumerData key: aKey secret: aSecret redirectUrl: aUrl);
+		  		googleData: 
+			  (ZnOAuth2ConsumerData key: aKey secret: aSecret redirectUrl: aUrl) forApi: apiName;
 		  yourself
 ]
 
@@ -34,10 +34,14 @@ GoogleAuthenticationServerFactory class >> getServerOn: aPort [
 ]
 
 { #category : #building }
-GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks [
+GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks scopes: aCollection apiName: apiName [
 
 	| srv delegate response |
-	delegate := self delegateKey: aKey secret: aSecret redirect: aUrl.
+	delegate := self
+		            delegateApi: apiName
+		            key: aKey
+		            secret: aSecret
+		            redirect: aUrl.
 	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock ].
 
 
@@ -45,31 +49,12 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 		       delegate: delegate;
 		       yourself.
 
-	(srv hasSessionForKey: 'google-session') ifFalse: [ 
-		response := ZnEasy get:
-			            ('http://localhost:<1s>/sso-google' expandMacrosWith:
-				             aPort printString) ].
-
-	^ srv
-]
-
-{ #category : #building }
-GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks scopes: aCollection [
-
-	| srv delegate response |
-	delegate := self delegateKey: aKey secret: aSecret redirect: aUrl.
-	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock ].
-
-
-	srv := (self getServerOn: aPort)
-		       delegate: delegate;
-		       yourself.
-
-	(srv hasSessionForKey: 'google-session' scopes: aCollection) 
-		ifFalse: [ 
-			response := ZnEasy get:
-				            ('http://localhost:<1s>/sso-google' expandMacrosWith:
-					             aPort printString) ].
+	(srv
+		 hasSessionForKey: (delegate sessionIdForApi: apiName)
+		 scopes: aCollection) ifFalse: [ 
+		response := ZnEasy get: ('http://localhost:<1s>/sso-google/<2s>'
+				             expandMacrosWith: aPort printString
+				             with: apiName) ].
 
 	^ srv
 ]

@@ -1,10 +1,11 @@
 "
 settings JSON format 
 
-#port: String
-#url: String
+#port: Number
+#host: String
 #key: String
 #secret: String
+#apiName:String
 
 "
 Class {
@@ -19,6 +20,14 @@ Class {
 
 { #category : #'instance creation' }
 GoogleServiceClient class >> fromJson: aFilePathString [
+" json structure
+host
+keymapNamed: 
+secret
+port
+apiName
+"
+
 
 	^ self withSettings:
 		  (NeoJSONReader on: aFilePathString asFileReference readStream)
@@ -33,10 +42,21 @@ GoogleServiceClient class >> new [
 
 { #category : #'instance creation' }
 GoogleServiceClient class >> withSettings: aDictionary [
+"host
+keymapNamed: 
+secret
+port
+apiName"
 
 	^ super new
 		  initializeSettings: aDictionary;
 		  yourself
+]
+
+{ #category : #accessing }
+GoogleServiceClient >> apiName [
+
+	^ settings at: #apiName
 ]
 
 { #category : #initialization }
@@ -46,7 +66,7 @@ GoogleServiceClient >> authenticationPort [
 ]
 
 { #category : #initialization }
-GoogleServiceClient >> buildAuthenticationServer [
+GoogleServiceClient >> buildAuthenticationServerForAPI:apiName [
 
 	^ GoogleAuthenticationServerFactory
 		  port: self authenticationPort
@@ -55,6 +75,7 @@ GoogleServiceClient >> buildAuthenticationServer [
 		  redirectTo: self redirectUrl
 		  initializationBlocks: self initBlocks
 		  scopes: self requiredScopes
+		  apiName: apiName
 ]
 
 { #category : #testing }
@@ -93,17 +114,20 @@ GoogleServiceClient >> initializeSettings: aDictionary [
 	((aDictionary includesKey: #port) and: [ 
 		 (aDictionary includesKey: #url) and: [ 
 			 (aDictionary includesKey: #key) and: [ 
-				 aDictionary includesKey: #secret ] ] ])
+				 (aDictionary includesKey: #secret) and: [ 
+				 aDictionary includesKey: #apiName ] ] ] ])
 		ifTrue: [ settings := aDictionary ]
 		ifFalse: [ self error: 'Incomplete settings' ].
 
-	authenticationServer := self buildAuthenticationServer
+	authenticationServer := self buildAuthenticationServerForAPI: self apiName
 ]
 
 { #category : #initialization }
 GoogleServiceClient >> redirectUrl [
 
-	^ settings at: #url
+	^ '<1s>/sso-google-callback/<2s>'
+		  expandMacrosWith: (settings at: #host)
+		  with: (settings at: #apiName)
 ]
 
 { #category : #initialization }

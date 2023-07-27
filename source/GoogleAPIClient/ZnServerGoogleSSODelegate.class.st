@@ -31,10 +31,16 @@ ZnServerGoogleSSODelegate >> addInitializationBlock: aBlock [
 ]
 
 { #category : #'accessing-session' }
-ZnServerGoogleSSODelegate >> buildSession [
+ZnServerGoogleSSODelegate >> apiOfRequest: aRequest [
+
+	^ aRequest relativeUrl lastPathSegment
+]
+
+{ #category : #'accessing-session' }
+ZnServerGoogleSSODelegate >> buildSessionForApi: aString [
 
 	| session |
-	session := ZnOAuth2Session google: self googleData.
+	session := ZnOAuth2Session google: (self googleDataForApi: aString).
 	initializationBlocks do: [ :each | each value: session ].
 	session addDependent: self. 
 	^ session
@@ -55,22 +61,40 @@ ZnServerGoogleSSODelegate >> generateInvalidCallbackRequest [
 
 { #category : #accessing }
 ZnServerGoogleSSODelegate >> googleData [
-
+self halt.
 	^ googleData
 ]
 
 { #category : #accessing }
 ZnServerGoogleSSODelegate >> googleData: anObject [
-
+self halt.
 	googleData := anObject
+]
+
+{ #category : #accessing }
+ZnServerGoogleSSODelegate >> googleData: anObject forApi: aString [
+
+	googleData at: aString put: anObject.
+	self prefixMap at: aString put: #ssoGoogle:
+]
+
+{ #category : #accessing }
+ZnServerGoogleSSODelegate >> googleDataForApi: aString [
+
+	^ googleData at: aString
 ]
 
 { #category : #'accessing-session' }
 ZnServerGoogleSSODelegate >> googleSessionFor: aRequest [
 
+	| apiName sessionId |
+	apiName := self apiOfRequest: aRequest.
+	sessionId := self sessionIdForApi: apiName.
+
 	^ aRequest session
-		  attributeAt: 'google-session'
-		  ifAbsentPut: [ self buildSession ]
+		  attributeAt: sessionId
+		  ifAbsentPut: [ "'google-session'" 
+		  self buildSessionForApi: apiName ]
 ]
 
 { #category : #private }
@@ -123,11 +147,11 @@ ZnServerGoogleSSODelegate >> initialize [
 	super initialize.
 
 	self prefixMap
-		at: 'sso-sheets-google' put: #ssoSheetsGoogle:;
+		"at: 'sso-sheets-google' put: #ssoSheetsGoogle:;"
 		at: 'sso-google' put: #ssoGoogle:;
 		at: 'sso-google-callback' put: #ssoGoogleCallback:;
 		at: 'sso-google-data' put: #ssoGoogleData:.
-
+	googleData := Dictionary new.
 	initializationBlocks := OrderedCollection new
 ]
 
@@ -160,6 +184,12 @@ ZnServerGoogleSSODelegate >> printDictionary: aDictionary asHtmlOn: aStream [
 ZnServerGoogleSSODelegate >> resetInitializationBlock [
 
 	initializationBlocks := OrderedCollection new
+]
+
+{ #category : #'accessing-session' }
+ZnServerGoogleSSODelegate >> sessionIdForApi: apiName [
+
+	^ '<1s>-session' expandMacrosWith: apiName
 ]
 
 { #category : #responses }
@@ -206,24 +236,6 @@ ZnServerGoogleSSODelegate >> ssoGoogleData: request [
 		stream << '<h3>Google UserData</h3>'.
 		self printDictionary: userData asHtmlOn: stream.
 		stream << '<a href="sso-reset">Reset</a>'  ].
-
-	entity := ZnEntity html: html. 
-	^ ZnResponse ok: entity
-]
-
-{ #category : #responses }
-ZnServerGoogleSSODelegate >> ssoSheetsGoogle: request [
-
-	| googleSession html entity |
-	
-	googleSession := self googleSessionFor: request.
-		
-	html := self htmlPageTitled: 'Zinc SSO Google Login' do: [ :stream |
-		stream
-			<< '<h3>Google SSO</h3>' ;
-			<< '<a href="' ;
-			<< googleSession authenticationUrl asString ;
-			<< '">Login with Google</a>' ].
 
 	entity := ZnEntity html: html. 
 	^ ZnResponse ok: entity

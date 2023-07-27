@@ -10,7 +10,7 @@ BaselineOfGoogleAPIClient >> baseline: spec [
 	<baseline>
 	spec for: #common do: [ 
 		self neoBaselines: spec.
-		"self openWeatherBaseline: spec."
+		
 		self zincHTTPComponentsBaseline: spec.
 		spec
 			package: #GoogleAPIClient
