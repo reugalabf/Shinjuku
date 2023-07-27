@@ -127,7 +127,7 @@ GoogleServiceClient >> redirectUrl [
 
 	^ '<1s>:<2s>/sso-google-callback/<3s>'
 		  expandMacrosWith: (settings at: #host)
-		  with: (settings at: #port)
+		  with: (settings at: #port)printString
 		  with: (settings at: #apiName)
 ]
 
