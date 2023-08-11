@@ -68,7 +68,10 @@ ZnServerGoogleSSODelegate >> googleData: anObject forApi: aString [
 	self prefixMap at: (self localUrlForAPI: aString) put: #ssoGoogle:.
 	self prefixMap
 		at: (self localRedirectUrlForAPI: aString)
-		put: #ssoGoogleCallback:
+		put: #ssoGoogleCallback:.
+	self prefixMap
+		at: (self localDataUrlForApi: aString)
+		put: #sooGoogleData:
 ]
 
 { #category : #accessing }
@@ -154,6 +157,13 @@ ZnServerGoogleSSODelegate >> isOAuth2Callback: aRequest [
 	^aRequest uri queryKeys includes: 'code'
 ]
 
+{ #category : #responses }
+ZnServerGoogleSSODelegate >> localDataUrlForApi: aString [
+
+	^ 'sso-google-data-<1s>' expandMacrosWith:
+		  (self apiOfRequest: aString)
+]
+
 { #category : #initialization }
 ZnServerGoogleSSODelegate >> localRedirectUrlForAPI: apiName [
 
@@ -219,18 +229,14 @@ ZnServerGoogleSSODelegate >> ssoGoogle: request [
 ZnServerGoogleSSODelegate >> ssoGoogleCallback: request [
 
 	| googleSession |
-	self halt.
-	(self isOAuth2Callback: request)
-		ifFalse: [ ^ self generateInvalidCallbackRequest ].
+	(self isOAuth2Callback: request) ifFalse: [ 
+		^ self generateInvalidCallbackRequest ].
 
 	googleSession := self googleSessionFor: request.
 	googleSession handleAuthenticationCallback: request uri query.
 
-	^ ZnResponse redirect: "'sso-google-data'"
-		  ('sso-google-data-<1s>' expandMacrosWith:
-			   (self apiOfRequest: request)) 
-			
-			"^ZnResponse ok: (ZnEntity textCRLF: 'OK')"
+	^ ZnResponse redirect:
+		  (self localDataUrlForApi: (self apiOfRequest: request))
 ]
 
 { #category : #responses }
