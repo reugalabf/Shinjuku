@@ -33,7 +33,9 @@ ZnServerGoogleSSODelegate >> addInitializationBlock: aBlock [
 { #category : #'accessing-session' }
 ZnServerGoogleSSODelegate >> apiOfRequest: aRequest [
 
-	^ aRequest relativeUrl lastPathSegment
+	"^ aRequest relativeUrl lastPathSegment"
+	
+	^ (aRequest relativeUrl lastPathSegment substrings: #( $- )) last
 ]
 
 { #category : #'accessing-session' }
@@ -60,22 +62,13 @@ ZnServerGoogleSSODelegate >> generateInvalidCallbackRequest [
 ]
 
 { #category : #accessing }
-ZnServerGoogleSSODelegate >> googleData [
-self halt.
-	^ googleData
-]
-
-{ #category : #accessing }
-ZnServerGoogleSSODelegate >> googleData: anObject [
-self halt.
-	googleData := anObject
-]
-
-{ #category : #accessing }
 ZnServerGoogleSSODelegate >> googleData: anObject forApi: aString [
 
 	googleData at: aString put: anObject.
-	self prefixMap at: aString put: #ssoGoogle:
+	self prefixMap at: (self localUrlForAPI: aString) put: #ssoGoogle:.
+	self prefixMap
+		at: (self localRedirectUrlForAPI: aString)
+		put: #ssoGoogleCallback:
 ]
 
 { #category : #accessing }
@@ -161,6 +154,18 @@ ZnServerGoogleSSODelegate >> isOAuth2Callback: aRequest [
 	^aRequest uri queryKeys includes: 'code'
 ]
 
+{ #category : #initialization }
+ZnServerGoogleSSODelegate >> localRedirectUrlForAPI: apiName [
+
+	^ 'sso-google-callback-<1s>' expandMacrosWith: apiName
+]
+
+{ #category : #initialization }
+ZnServerGoogleSSODelegate >> localUrlForAPI: apiName [
+
+	^ 'sso-google-<1s>' expandMacrosWith: apiName
+]
+
 { #category : #printing }
 ZnServerGoogleSSODelegate >> printDictionary: aDictionary asHtmlOn: aStream [
 
@@ -221,10 +226,11 @@ ZnServerGoogleSSODelegate >> ssoGoogleCallback: request [
 	googleSession := self googleSessionFor: request.
 	googleSession handleAuthenticationCallback: request uri query.
 
-"	^ ZnResponse redirect:
-		  ('sso-google-data/<1s>' expandMacrosWith:
-			   (self apiOfRequest: request))"
-			^ZnResponse ok: (ZnEntity textCRLF: 'OK')
+	^ ZnResponse redirect: "'sso-google-data'"
+		  ('sso-google-data-<1s>' expandMacrosWith:
+			   (self apiOfRequest: request)) 
+			
+			"^ZnResponse ok: (ZnEntity textCRLF: 'OK')"
 ]
 
 { #category : #responses }

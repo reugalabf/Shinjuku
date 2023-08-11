@@ -66,7 +66,7 @@ GoogleServiceClient >> authenticationPort [
 ]
 
 { #category : #initialization }
-GoogleServiceClient >> buildAuthenticationServerForAPI:apiName [
+GoogleServiceClient >> buildAuthenticationServerForAPI [
 
 	^ GoogleAuthenticationServerFactory
 		  port: self authenticationPort
@@ -75,7 +75,7 @@ GoogleServiceClient >> buildAuthenticationServerForAPI:apiName [
 		  redirectTo: self redirectUrl
 		  initializationBlocks: self initBlocks
 		  scopes: self requiredScopes
-		  apiName: apiName
+		  apiName: self apiName
 ]
 
 { #category : #testing }
@@ -119,13 +119,13 @@ GoogleServiceClient >> initializeSettings: aDictionary [
 		ifTrue: [ settings := aDictionary ]
 		ifFalse: [ self error: 'Incomplete settings' ].
 
-	authenticationServer := self buildAuthenticationServerForAPI: self apiName
+	authenticationServer := self buildAuthenticationServerForAPI
 ]
 
 { #category : #initialization }
 GoogleServiceClient >> redirectUrl [
 
-	^ '<1s>:<2s>/sso-google-callback/<3s>'
+	^ '<1s>:<2s>/sso-google-callback-<3s>'
 		  expandMacrosWith: (settings at: #host)
 		  with: (settings at: #port)printString
 		  with: (settings at: #apiName)
