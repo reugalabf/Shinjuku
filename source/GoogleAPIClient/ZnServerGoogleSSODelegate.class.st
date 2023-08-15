@@ -25,9 +25,12 @@ Class {
 }
 
 { #category : #accessing }
-ZnServerGoogleSSODelegate >> addInitializationBlock: aBlock [
+ZnServerGoogleSSODelegate >> addInitializationBlock: aBlock forAPI: apiName [
 
-	initializationBlocks add: aBlock
+	initializationBlocks
+		at: apiName
+		ifPresent: [ :col | col add: aBlock ]
+		ifAbsentPut: [ OrderedCollection with: aBlock ]
 ]
 
 { #category : #'accessing-session' }
@@ -43,9 +46,17 @@ ZnServerGoogleSSODelegate >> buildSessionForApi: aString [
 
 	| session |
 	session := ZnOAuth2Session google: (self googleDataForApi: aString).
-	initializationBlocks do: [ :each | each value: session ].
+	(initializationBlocks at: aString) do: [ :each | each value: session ].
 	session addDependent: self. 
 	^ session
+]
+
+{ #category : #'as yet unclassified' }
+ZnServerGoogleSSODelegate >> clientAuthenticationUrlForAPI: apiName port: aPort [
+
+	^ 'http://localhost:<1s>/sso-google-<2s>'
+		  expandMacrosWith: aPort printString
+		  with: apiName
 ]
 
 { #category : #private }
@@ -142,13 +153,12 @@ ZnServerGoogleSSODelegate >> initialize [
 
 	super initialize.
 
-	self prefixMap
-		"at: 'sso-sheets-google' put: #ssoSheetsGoogle:;"
+	self prefixMap		
 		at: 'sso-google' put: #ssoGoogle:;
 		at: 'sso-google-callback' put: #ssoGoogleCallback:;
 		at: 'sso-google-data' put: #ssoGoogleData:.
 	googleData := Dictionary new.
-	initializationBlocks := OrderedCollection new
+	initializationBlocks := Dictionary new
 ]
 
 { #category : #testing }
@@ -160,8 +170,7 @@ ZnServerGoogleSSODelegate >> isOAuth2Callback: aRequest [
 { #category : #responses }
 ZnServerGoogleSSODelegate >> localDataUrlForApi: aString [
 
-	^ 'sso-google-data-<1s>' expandMacrosWith:
-		  (self apiOfRequest: aString)
+	^ 'sso-google-data-<1s>' expandMacrosWith: aString
 ]
 
 { #category : #initialization }
@@ -193,12 +202,6 @@ ZnServerGoogleSSODelegate >> printDictionary: aDictionary asHtmlOn: aStream [
 					nextPutAll: value asString ].
 		aStream nextPutAll: '</li>' ].
 	aStream nextPutAll: '</ul>'
-]
-
-{ #category : #accessing }
-ZnServerGoogleSSODelegate >> resetInitializationBlock [
-
-	initializationBlocks := OrderedCollection new
 ]
 
 { #category : #'accessing-session' }
@@ -257,10 +260,13 @@ ZnServerGoogleSSODelegate >> ssoGoogleData: request [
 ]
 
 { #category : #updating }
-ZnServerGoogleSSODelegate >> update: anAspect with: anObject [
+ZnServerGoogleSSODelegate >> update: anAspect with: aSession [
 
-	self addInitializationBlock: [ :session | 
-		session
-			refreshToken: anObject;
-			liveAccessToken ]
+	self halt.
+	self
+		addInitializationBlock: [ :session | 
+			session
+				"refreshToken: apiTokenAssoc value;"
+				liveAccessToken ]
+		forAPI: (aSession redirectUrl lastPathSegment substrings: #($-)) last
 ]

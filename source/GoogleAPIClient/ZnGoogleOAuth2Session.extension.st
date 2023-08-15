@@ -4,10 +4,11 @@ Extension { #name : #ZnGoogleOAuth2Session }
 ZnGoogleOAuth2Session >> handleAuthenticationCallback: aParameterDictionary [
 
 	| oldtoken |
+	self halt.
 	oldtoken := self refreshToken.
 	super handleAuthenticationCallback: aParameterDictionary.
 	((oldtoken = self refreshToken) not and: [ self refreshToken notNil ]) 
-		ifTrue: [ self changed: #refreshToken with: self refreshToken ]
+		ifTrue: [ self changed: #refreshToken with: (self) ]
 ]
 
 { #category : #'*GoogleAPIClient' }

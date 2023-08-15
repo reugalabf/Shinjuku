@@ -42,7 +42,7 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 		            key: aKey
 		            secret: aSecret
 		            redirect: aUrl.
-	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock ].
+	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock forAPI:apiName ].
 
 
 	srv := (self getServerOn: aPort)
@@ -52,9 +52,10 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 	(srv
 		 hasSessionForKey: (delegate sessionIdForApi: apiName)
 		 scopes: aCollection) ifFalse: [ 
-		response := ZnEasy get: ('http://localhost:<1s>/sso-google-<2s>'
-				             expandMacrosWith: aPort printString
-				             with: apiName) ].
+		response := ZnEasy get:
+			            (delegate
+				             clientAuthenticationUrlForAPI: apiName
+				             port: aPort) ].
 
 	^ srv
 ]
