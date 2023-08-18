@@ -1,6 +1,13 @@
 Extension { #name : #ZnServer }
 
 { #category : #'*GoogleAPIClient' }
+ZnServer >> hasDelegate [
+
+	self optionAt: #delegate ifAbsent: [ ^ false ].
+	^ true
+]
+
+{ #category : #'*GoogleAPIClient' }
 ZnServer >> hasSessionForKey: aString [
 
 	^ self sessionManager hasSessionForKey: aString

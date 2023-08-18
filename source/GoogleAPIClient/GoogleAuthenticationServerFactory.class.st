@@ -38,8 +38,8 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 
 	| srv delegate response |
 	srv := self getServerOn: aPort.
-	srv delegate
-		ifNil: [ 
+	srv hasDelegate
+		ifTrue: [ 
 			delegate := self
 				            delegateApi: apiName
 				            key: aKey
@@ -50,8 +50,8 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 
 
 			srv delegate: delegate ]
-		ifNotNil: [ :aDelegate | 
-			aDelegate
+		ifFalse: [ :aDelegate | 
+			self
 				setApi: apiName
 				key: aKey
 				secret: aSecret
