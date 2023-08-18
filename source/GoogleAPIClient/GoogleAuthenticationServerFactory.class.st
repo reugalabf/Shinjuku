@@ -37,17 +37,27 @@ GoogleAuthenticationServerFactory class >> getServerOn: aPort [
 GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret redirectTo: aUrl initializationBlocks: initBlocks scopes: aCollection apiName: apiName [
 
 	| srv delegate response |
-	delegate := self
-		            delegateApi: apiName
-		            key: aKey
-		            secret: aSecret
-		            redirect: aUrl.
-	initBlocks do: [ :aBlock | delegate addInitializationBlock: aBlock forAPI:apiName ].
+	srv := self getServerOn: aPort.
+	srv delegate
+		ifNil: [ 
+			delegate := self
+				            delegateApi: apiName
+				            key: aKey
+				            secret: aSecret
+				            redirect: aUrl.
+			initBlocks do: [ :aBlock | 
+				delegate addInitializationBlock: aBlock forAPI: apiName ].
 
 
-	srv := (self getServerOn: aPort)
-		       delegate: delegate;
-		       yourself.
+			srv delegate: delegate ]
+		ifNotNil: [ :aDelegate | 
+			aDelegate
+				setApi: apiName
+				key: aKey
+				secret: aSecret
+				redirect: aUrl
+				delegate: aDelegate ].
+
 
 	(srv
 		 hasSessionForKey: (delegate sessionIdForApi: apiName)
@@ -58,4 +68,13 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 				             port: aPort) ].
 
 	^ srv
+]
+
+{ #category : #private }
+GoogleAuthenticationServerFactory class >> setApi: apiName key: aKey secret: aSecret redirect: aUrl delegate: aDelegate [
+
+	aDelegate
+		googleData:
+		(ZnOAuth2ConsumerData key: aKey secret: aSecret redirectUrl: aUrl)
+		forApi: apiName
 ]
