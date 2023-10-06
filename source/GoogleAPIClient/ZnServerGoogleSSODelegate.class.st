@@ -41,17 +41,50 @@ ZnServerGoogleSSODelegate >> apiOfRequest: aRequest [
 	^ (aRequest relativeUrl lastPathSegment substrings: #( $- )) last
 ]
 
+{ #category : #'private - html' }
+ZnServerGoogleSSODelegate >> authenticationSessionLinkFor: googleSession on: stream [
+
+	^ stream
+		  << '<h3>Google SSO</h3>';
+		  << '<p>';
+		  << '<a href="';
+		  << googleSession authenticationUrl asString;
+		  << '">Login with Google</a>';
+		  << '</p>'
+]
+
+{ #category : #accessing }
+ZnServerGoogleSSODelegate >> availableGoogleDataName [
+
+	^ googleData keys
+]
+
+{ #category : #'private - html' }
+ZnServerGoogleSSODelegate >> availableServiceLinksOn: stream [
+
+	stream << '<h3>Google SSO</h3>'.
+	^ self availableGoogleDataName do: [ :name | 
+		  (stream << '<p>')
+			  << '<a href="';
+			  << ('sso-google-<1s>' expandMacrosWith: name);
+			  << ('">Login with Google.<1s></a>' expandMacrosWith: name);
+			  << '</p>' ]
+]
+
 { #category : #'accessing-session' }
 ZnServerGoogleSSODelegate >> buildSessionForApi: aString [
 
-	| session |
-	session := ZnOAuth2Session google: (self googleDataForApi: aString).
-	(initializationBlocks at: aString) do: [ :each | each value: session ].
-	session addDependent: self. 
+	| session gData |
+	gData := self googleDataForApi: aString.
+	gData ifNotNil: [ 
+		session := ZnOAuth2Session google: gData.
+		(initializationBlocks at: aString) do: [ :each | 
+			each value: session ].
+		session addDependent: self ].
 	^ session
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'private - html' }
 ZnServerGoogleSSODelegate >> clientAuthenticationUrlForAPI: apiName port: aPort [
 
 	^ 'http://localhost:<1s>/sso-google-<2s>'
@@ -59,16 +92,37 @@ ZnServerGoogleSSODelegate >> clientAuthenticationUrlForAPI: apiName port: aPort 
 		  with: apiName
 ]
 
-{ #category : #private }
+{ #category : #'private - html' }
 ZnServerGoogleSSODelegate >> generateInvalidCallbackRequest [
 
 	| html entity |
+	html := String streamContents: [ :stream | 
+		        stream
+			        << '<h3>Not a valid callback request</h3>';
+			        << '<p>';
+			        << '<a href="';
+			        << 'sso-google';
+			        << '">Available Google Services</a>';
+			        << '</p>' ].
 
-	html := String streamContents: [ :stream |
-		stream
-			nextPutAll: '<h3>Not a valid callback request</h3>' ].
+	entity := ZnEntity html: html.
+	^ ZnResponse ok: entity
+]
 
-	entity := ZnEntity html: html. 
+{ #category : #'private - html' }
+ZnServerGoogleSSODelegate >> generateInvalidRequest [
+
+	| html entity |
+	html := String streamContents: [ :stream | 
+		        stream
+			        << '<h3>Not a valid request</h3>';
+			        << '<p>';
+			        << '<a href="';
+			        << 'sso-google';
+			        << '">Available Google Services</a>';
+			        << '</p>' ].
+
+	entity := ZnEntity html: html.
 	^ ZnResponse ok: entity
 ]
 
@@ -82,13 +136,13 @@ ZnServerGoogleSSODelegate >> googleData: anObject forApi: aString [
 		put: #ssoGoogleCallback:.
 	self prefixMap
 		at: (self localDataUrlForApi: aString)
-		put: #sooGoogleData:
+		put: #ssoGoogleData:
 ]
 
 { #category : #accessing }
 ZnServerGoogleSSODelegate >> googleDataForApi: aString [
 
-	^ googleData at: aString
+	^ googleData at: aString ifAbsent: [ nil ]
 ]
 
 { #category : #'accessing-session' }
@@ -104,7 +158,7 @@ ZnServerGoogleSSODelegate >> googleSessionFor: aRequest [
 		  self buildSessionForApi: apiName ]
 ]
 
-{ #category : #private }
+{ #category : #'private - html' }
 ZnServerGoogleSSODelegate >> htmlPageTitled: title do: block [
 	^ String streamContents: [ :stream |
 		stream 
@@ -214,17 +268,21 @@ ZnServerGoogleSSODelegate >> sessionIdForApi: apiName [
 ZnServerGoogleSSODelegate >> ssoGoogle: request [
 
 	| googleSession html entity |
-	
 	googleSession := self googleSessionFor: request.
-		
-	html := self htmlPageTitled: 'Zinc SSO Google Login' do: [ :stream |
-		stream
-			<< '<h3>Google SSO</h3>' ;
-			<< '<a href="' ;
-			<< googleSession authenticationUrl asString ;
-			<< '">Login with Google</a>' ].
+	googleSession
+		ifNil: [ 
+			html := self
+				        htmlPageTitled: 'Zinc SSO Google Login'
+				        do: [ :stream | self availableServiceLinksOn: stream ] ]
+		ifNotNil: [ 
+			html := self
+				        htmlPageTitled: 'Zinc SSO Google Login'
+				        do: [ :stream | 
+					        self
+						        authenticationSessionLinkFor: googleSession
+						        on: stream ] ].
 
-	entity := ZnEntity html: html. 
+	entity := ZnEntity html: html.
 	^ ZnResponse ok: entity
 ]
 
@@ -248,25 +306,32 @@ ZnServerGoogleSSODelegate >> ssoGoogleData: request [
 	| googleSession userData html entity |
 	
 	googleSession := self googleSessionFor: request.
+	googleSession ifNil: [ ^ self generateInvalidRequest ].
+
 	userData := googleSession getUserData.
 
-	html := self htmlPageTitled: 'Zinc SSO Google UserData' do: [ :stream | 
-		stream << '<h3>Google UserData</h3>'.
-		self printDictionary: userData asHtmlOn: stream.
-		stream << '<a href="sso-reset">Reset</a>'  ].
+	html := self
+		        htmlPageTitled: 'Zinc SSO Google UserData'
+		        do: [ :stream | self userDataPage: userData on: stream ].
 
-	entity := ZnEntity html: html. 
+	entity := ZnEntity html: html.
 	^ ZnResponse ok: entity
 ]
 
 { #category : #updating }
 ZnServerGoogleSSODelegate >> update: anAspect with: aSession [
 
-	self halt.
 	self
 		addInitializationBlock: [ :session | 
-			session
-				"refreshToken: apiTokenAssoc value;"
-				liveAccessToken ]
-		forAPI: (aSession redirectUrl lastPathSegment substrings: #($-)) last
+			session liveAccessToken
+			"refreshToken: apiTokenAssoc value;" ]
+		forAPI: (aSession redirectUrl substrings: #( $- )) last
+]
+
+{ #category : #responses }
+ZnServerGoogleSSODelegate >> userDataPage: userData on: stream [
+
+	stream << '<h3>Google UserData</h3>'.
+	self printDictionary: userData asHtmlOn: stream.
+	^ stream << '<a href="sso-reset">Reset</a>'
 ]

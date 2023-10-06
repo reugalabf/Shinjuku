@@ -39,25 +39,24 @@ GoogleAuthenticationServerFactory class >> port: aPort key: aKey secret: aSecret
 	| srv delegate response |
 	srv := self getServerOn: aPort.
 	srv hasDelegate
-		ifTrue: [ 
+		ifFalse: [ 
 			delegate := self
 				            delegateApi: apiName
 				            key: aKey
 				            secret: aSecret
 				            redirect: aUrl.
-			initBlocks do: [ :aBlock | 
-				delegate addInitializationBlock: aBlock forAPI: apiName ].
-
-
 			srv delegate: delegate ]
-		ifFalse: [ :aDelegate | 
+		ifTrue: [ 
+			delegate := srv delegate.
 			self
 				setApi: apiName
 				key: aKey
 				secret: aSecret
 				redirect: aUrl
-				delegate: aDelegate ].
+				delegate: delegate ].
 
+	initBlocks do: [ :aBlock | 
+		delegate addInitializationBlock: aBlock forAPI: apiName ].
 
 	(srv
 		 hasSessionForKey: (delegate sessionIdForApi: apiName)
