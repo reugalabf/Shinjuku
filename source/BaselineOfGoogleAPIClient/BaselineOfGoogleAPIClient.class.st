@@ -10,8 +10,8 @@ BaselineOfGoogleAPIClient >> baseline: spec [
 	<baseline>
 	spec for: #common do: [ 
 		self neoBaselines: spec.
-		
 		self zincHTTPComponentsBaseline: spec.
+		self ztimestampBaseline:spec.
 		spec
 			package: #GoogleAPIClient
 			with: [ spec requires: #( 'NeoJSON'  'ZincHTTPComponents' ) ];
@@ -36,19 +36,20 @@ BaselineOfGoogleAPIClient >> neoBaselines: spec [
 ]
 
 { #category : #baselines }
-BaselineOfGoogleAPIClient >> openWeatherBaseline: spec [
-
-	spec
-		baseline: 'OpenWeatherMap'
-		with: [ spec repository: 'github://reugalabf/OpenWeatherAPI4Pharo:main' ].
-
-
-]
-
-{ #category : #baselines }
 BaselineOfGoogleAPIClient >> zincHTTPComponentsBaseline: spec [
 
 	spec
 		baseline: 'ZincHTTPComponents'
-		with: [ spec repository: 'github://svenvc/zinc/repository' ]
+		with: [ spec 
+			loads:#('SSO-OAuth2');
+			repository: 'github://svenvc/zinc/repository' ]
+]
+
+{ #category : #baselines }
+BaselineOfGoogleAPIClient >> ztimestampBaseline: spec [
+
+	spec baseline: 'ztimestamp' with: [ 
+		spec
+			loads: #( 'common' );
+			repository: 'https://github.com/svenvc/ztimestamp.git' ]
 ]
