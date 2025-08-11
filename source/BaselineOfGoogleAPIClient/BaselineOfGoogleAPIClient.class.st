@@ -14,7 +14,7 @@ BaselineOfGoogleAPIClient >> baseline: spec [
 		self ztimestampBaseline:spec.
 		spec
 			package: #GoogleAPIClient
-			with: [ spec requires: #( 'NeoJSON'  'ZincHTTPComponents' ) ];
+			with: [ spec requires: #( 'NeoJSON'  'ZincHTTPComponents' 'ztimestamp' ) ];
 			package: #'GoogleAPIClient-Tests'
 			with: [ spec requires: #( 'GoogleAPIClient' ) ].
 		spec
